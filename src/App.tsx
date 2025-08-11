@@ -1,11 +1,11 @@
-import { Button, HStack } from "@chakra-ui/react";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/inex";
 
 const App = () => {
 	return (
-		<HStack>
-			<Button>Click me</Button>
-			<Button>Click me</Button>
-		</HStack>
+		<>
+			<RouterProvider router={router} />
+		</>
 	);
 };
 
