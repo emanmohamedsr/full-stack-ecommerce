@@ -2,7 +2,9 @@ import { Button, Heading, HStack, Image, Text, VStack } from "@chakra-ui/react";
 import { Link, useRouteError } from "react-router-dom";
 import ErrorImg from "@/assets/error.svg";
 import { useColorMode } from "@/hooks/useColorMode";
-
+import { FaHome } from "react-icons/fa";
+import { MdOutlineRefresh } from "react-icons/md";
+import { IoLogInOutline } from "react-icons/io5";
 interface IProps {
 	defaultStatusCode?: number;
 	defaultTitle?: string;
@@ -68,6 +70,7 @@ const ErrorHandler = ({
 						borderColor={colorMode === "dark" ? "white" : "teal.950"}
 						color={colorMode === "dark" ? "white" : "teal.950"}
 						onClick={() => window.location.reload()}>
+						<MdOutlineRefresh />
 						Refresh
 					</Button>
 				)}
@@ -78,6 +81,7 @@ const ErrorHandler = ({
 							variant='outline'
 							borderColor={colorMode === "dark" ? "white" : "teal.950"}
 							color={colorMode === "dark" ? "white" : "teal.950"}>
+							<FaHome />
 							Go to Home
 						</Button>
 					</Link>
@@ -89,6 +93,7 @@ const ErrorHandler = ({
 							variant='outline'
 							borderColor={colorMode === "dark" ? "white" : "teal.950"}
 							color={colorMode === "dark" ? "white" : "teal.950"}>
+							<IoLogInOutline />
 							Login
 						</Button>
 					</Link>

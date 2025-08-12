@@ -1,6 +1,7 @@
 import { useColorMode } from "@/hooks/useColorMode";
 import { Heading, Text, Button, Image, HStack, VStack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { FaHome } from "react-icons/fa";
 import pageNotFoundImg from "@/assets/NotFoundPage.svg";
 
 const PageNotFound = () => {
@@ -40,6 +41,7 @@ const PageNotFound = () => {
 					variant='outline'
 					borderColor={colorMode === "dark" ? "white" : "teal.950"}
 					color={colorMode === "dark" ? "white" : "teal.950"}>
+					<FaHome />
 					Go to Home
 				</Button>
 			</Link>
