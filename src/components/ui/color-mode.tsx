@@ -1,6 +1,7 @@
 "use client";
 
 import { useColorMode } from "@/hooks/useColorMode";
+import type { ColorMode } from "@/types";
 import type { IconButtonProps, SpanProps } from "@chakra-ui/react";
 import { ClientOnly, IconButton, Skeleton, Span } from "@chakra-ui/react";
 import { ThemeProvider } from "next-themes";
@@ -17,15 +18,11 @@ export function ColorModeProvider(props: ColorModeProviderProps) {
 	);
 }
 
-export type ColorMode = "light" | "dark";
-
 export interface UseColorModeReturn {
 	colorMode: ColorMode;
 	setColorMode: (colorMode: ColorMode) => void;
 	toggleColorMode: () => void;
 }
-
-// useColorModeValue has been moved to useColorModeValue.ts
 
 export function ColorModeIcon() {
 	const { colorMode } = useColorMode();

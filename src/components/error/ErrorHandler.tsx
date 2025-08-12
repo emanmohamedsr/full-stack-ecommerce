@@ -1,4 +1,7 @@
-import { Link, useLocation, useRouteError } from "react-router-dom";
+import { Button, Heading, HStack, Image, Text, VStack } from "@chakra-ui/react";
+import { Link, useRouteError } from "react-router-dom";
+import ErrorImg from "@/assets/error.svg";
+import { useColorMode } from "@/hooks/useColorMode";
 
 interface IProps {
 	defaultStatusCode?: number;
@@ -19,26 +22,79 @@ const ErrorHandler = ({
 		[key: string]: unknown;
 	};
 
+	const { colorMode } = useColorMode();
 	const error = useRouteError() as RouteError | undefined;
-
-	const { pathname } = useLocation();
-
 	const statusCode = error?.status || defaultStatusCode;
-
 	const errorMessage = error?.message || defaultTitle;
 
 	return (
-		<div>
-			<h1>{statusCode}</h1>
-			<p>{errorMessage}</p>
-			{showHome && <Link to='/'>Go Home</Link>}
-			<br />
-			{showRefresh && (
-				<button onClick={() => window.location.replace(pathname)}>
-					Refresh Page
-				</button>
-			)}
-		</div>
+		<VStack
+			textAlign='center'
+			py={10}
+			px={6}
+			h='100vh'
+			justify={"center"}
+			align={"center"}>
+			<HStack spaceX={8} align='center'>
+				<Image
+					src={ErrorImg}
+					alt='error'
+					display={"none"}
+					md={{ display: "block" }}
+				/>
+				<VStack>
+					<Heading
+						display='inline-block'
+						as='h2'
+						size='2xl'
+						color={colorMode === "dark" ? "white" : "teal.950"}>
+						Oops, something went wrong.
+					</Heading>
+					<Text color={"gray.500"} mb={6}>
+						{statusCode} - {errorMessage}
+					</Text>
+				</VStack>
+			</HStack>
+			<HStack
+				gap={2}
+				align='center'
+				justifyContent={"center"}
+				alignItems={"center"}
+				flexWrap='wrap'>
+				{showRefresh && (
+					<Button
+						colorScheme={colorMode === "dark" ? "whiteAlpha" : "teal"}
+						variant='outline'
+						borderColor={colorMode === "dark" ? "white" : "teal.950"}
+						color={colorMode === "dark" ? "white" : "teal.950"}
+						onClick={() => window.location.reload()}>
+						Refresh
+					</Button>
+				)}
+				{showHome && (
+					<Link to={"/"}>
+						<Button
+							colorScheme={colorMode === "dark" ? "whiteAlpha" : "teal"}
+							variant='outline'
+							borderColor={colorMode === "dark" ? "white" : "teal.950"}
+							color={colorMode === "dark" ? "white" : "teal.950"}>
+							Go to Home
+						</Button>
+					</Link>
+				)}
+				{statusCode === 401 && (
+					<Link to={"/login"}>
+						<Button
+							colorScheme={colorMode === "dark" ? "whiteAlpha" : "teal"}
+							variant='outline'
+							borderColor={colorMode === "dark" ? "white" : "teal.950"}
+							color={colorMode === "dark" ? "white" : "teal.950"}>
+							Login
+						</Button>
+					</Link>
+				)}
+			</HStack>
+		</VStack>
 	);
 };
 export default ErrorHandler;
