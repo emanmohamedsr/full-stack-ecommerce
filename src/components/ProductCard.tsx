@@ -1,22 +1,28 @@
+import type { IProduct } from "@/interfaces";
 import { Box, Button, Card, Image } from "@chakra-ui/react";
+import Product from "../assets/product.svg";
 
-const ProductCard = () => {
+interface IProps {
+	product: IProduct;
+}
+
+const ProductCard = ({
+	product: { title, description, thumbnail, stock, price },
+}: IProps) => {
+	const thumbnailUrl = thumbnail?.url
+		? `${import.meta.env.VITE_API_URL}${thumbnail.url}`
+		: Product;
 	return (
 		<Card.Root width='250px' md={{ width: "320px" }}>
 			<Card.Body gap='2'>
-				<Image
-					borderRadius='md'
-					src='https://tse2.mm.bing.net/th/id/OIP.a-YDWw7IcFGxYeuz_1wUrgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3'
-					alt='product-image'
-				/>
-				<Card.Title mt='2'>Nue Camp</Card.Title>
-				<Card.Description>
-					This is the card body. Lorem ipsum dolor sit amet, consectetur
-					adipiscing elit. Curabitur nec odio vel dui euismod fermentum.
-					Curabitur nec odio vel dui euismod fermentum.
-				</Card.Description>
+				<Image borderRadius='md' src={thumbnailUrl} alt={title} />
+				<Card.Title mt='2'>{title}</Card.Title>
+				<Card.Description>{description}</Card.Description>
 				<Box mt='2' fontSize={"sms"}>
-					$99.99
+					${price}
+				</Box>
+				<Box fontSize={"xs"} color='gray.500'>
+					{stock > 0 ? `${stock} in stock` : "Out of stock"}
 				</Box>
 			</Card.Body>
 			<Card.Footer justifyContent='flex-end'>
