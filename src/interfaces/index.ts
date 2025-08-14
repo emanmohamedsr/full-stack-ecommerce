@@ -6,7 +6,13 @@ export interface UseColorModeReturn {
 	toggleColorMode: () => void;
 }
 
+export interface ICategory {
+	id: number;
+	documentId: string;
+	title: string;
+}
 export interface IProduct {
+	documentId: string;
 	id: number;
 	title: string;
 	description: string;
@@ -15,7 +21,7 @@ export interface IProduct {
 	};
 	stock: number;
 	price: number;
-	category: string;
+	category: ICategory[];
 }
 
 export interface IAxiosError {

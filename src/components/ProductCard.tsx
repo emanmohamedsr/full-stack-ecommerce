@@ -1,14 +1,16 @@
 import type { IProduct } from "@/interfaces";
 import { Box, Button, Card, Image } from "@chakra-ui/react";
 import Product from "../assets/product.svg";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
 	product: IProduct;
 }
 
 const ProductCard = ({
-	product: { title, description, thumbnail, stock, price },
+	product: { documentId, title, description, thumbnail, stock, price },
 }: IProps) => {
+	const navigate = useNavigate();
 	const thumbnailUrl = thumbnail?.url
 		? `${import.meta.env.VITE_API_URL}${thumbnail.url}`
 		: Product;
@@ -33,7 +35,10 @@ const ProductCard = ({
 				</Box>
 			</Card.Body>
 			<Card.Footer justifyContent='flex-end'>
-				<Button colorPalette={"gray"} variant='outline'>
+				<Button
+					colorPalette={"gray"}
+					variant='outline'
+					onClick={() => navigate(`/products/${documentId}`)}>
 					View
 				</Button>
 				<Button colorPalette={"teal"} _hover={{ bg: "teal.focusRing" }}>

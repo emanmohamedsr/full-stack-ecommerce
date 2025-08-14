@@ -1,5 +1,5 @@
 import { RouterProvider } from "react-router-dom";
-import router from "./router/inex";
+import router from "./router";
 
 const App = () => {
 	return (

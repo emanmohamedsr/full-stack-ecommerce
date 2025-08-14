@@ -8,9 +8,9 @@ const ProductSkeleton = () => {
 				<Card.Title mt='2'>
 					<Skeleton height='20px' width='60%' />
 				</Card.Title>
-				<Card.Description>
+				<Box>
 					<SkeletonText noOfLines={3} gap='4' />
-				</Card.Description>
+				</Box>
 				<Box mt='2' fontSize={"sm"}>
 					<Skeleton height='20px' width='40%' />
 				</Box>

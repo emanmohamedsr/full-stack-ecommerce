@@ -7,7 +7,11 @@ export const productsApi = createApi({
 		getProducts: builder.query({
 			query: () => `products?populate=thumbnail&populate=categories`,
 		}),
+		getOneProduct: builder.query({
+			query: (id) => `products/${id}?populate=thumbnail&populate=categories`,
+			transformResponse: (response) => response.data,
+		}),
 	}),
 });
 
-export const { useGetProductsQuery } = productsApi;
+export const { useGetProductsQuery, useGetOneProductQuery } = productsApi;

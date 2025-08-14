@@ -1,6 +1,5 @@
 import { EmptyState, VStack } from "@chakra-ui/react";
 import type { ReactNode } from "react";
-import { LuShoppingCart } from "react-icons/lu";
 
 interface IProps {
 	title: string;
