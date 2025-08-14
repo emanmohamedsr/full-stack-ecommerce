@@ -15,7 +15,14 @@ const ProductCard = ({
 	return (
 		<Card.Root width='250px' md={{ width: "320px" }}>
 			<Card.Body gap='2'>
-				<Image borderRadius='md' src={thumbnailUrl} alt={title} />
+				<Image
+					borderRadius='md'
+					src={thumbnailUrl}
+					alt={title}
+					boxSize='200px'
+					md={{ boxSize: "250px" }}
+					mx='auto'
+				/>
 				<Card.Title mt='2'>{title}</Card.Title>
 				<Card.Description>{description}</Card.Description>
 				<Box mt='2' fontSize={"sms"}>

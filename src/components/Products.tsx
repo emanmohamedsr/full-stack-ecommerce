@@ -2,20 +2,29 @@ import { HStack } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
 import { useGetProductsQuery } from "@/services/products";
 import type { IProduct } from "@/interfaces";
+import ProductsSkeleton from "./ProductsSkeleton";
+import EmptyProductsState from "./EmptyProductsState";
+import { VscEmptyWindow } from "react-icons/vsc";
 
 const Products = () => {
-	const { isError, isLoading, data } = useGetProductsQuery({});
+	const { isError, error, isLoading, data } = useGetProductsQuery({});
 	const products = data?.data || [];
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <ProductsSkeleton />;
 	}
 
 	if (isError) {
-		throw new Error("Failed to fetch products");
+		throw error;
 	}
 
 	if (products.length === 0) {
-		return <div>No products available</div>;
+		return (
+			<EmptyProductsState
+				title='No Products Found'
+				description='Looks like there are no products available.'>
+				<VscEmptyWindow />
+			</EmptyProductsState>
+		);
 	}
 	return (
 		<HStack flexWrap={"wrap"} justifyContent='center' gap={4} p={4}>
