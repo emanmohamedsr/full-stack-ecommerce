@@ -1,10 +1,10 @@
-import { ColorModeButton } from "@/components/ui/color-mode";
+import Navbar from "@/components/layout/Navbar";
 import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
 	return (
 		<div>
-			<ColorModeButton />
+			<Navbar />
 			<Outlet />
 		</div>
 	);

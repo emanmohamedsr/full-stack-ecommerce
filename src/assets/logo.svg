@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="160" viewBox="0 0 512 160" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">ma7al e-commerce logo</title>
+  <desc id="desc">Clean, minimalist wordmark in teal shades reading 'ma7al'.</desc>
+
+  <!-- Colors: Dark teal: #0F766E, Accent teal: #14B8A6 -->
+
+  <!-- Wordmark -->
+  <text x="0" y="100" font-family="Poppins, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial"
+        font-size="96" font-weight="600" fill="#0F766E">
+    ma
+    <tspan fill="#14B8A6">7</tspan>
+    al
+  </text>
+
+  <!-- Tagline -->
+  <text x="5" y="130" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial"
+        font-size="20" fill="#14B8A6" letter-spacing="1.5">
+    ecommerce
+  </text>
+</svg>
