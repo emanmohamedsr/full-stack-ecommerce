@@ -81,7 +81,7 @@ const CartPage = () => {
 							<Highlight
 								query='Total Price'
 								styles={{ px: "0.5", bg: "teal.subtle", color: "teal.fg" }}>
-								Total Price: 100.
+								Total Price: 100$
 							</Highlight>
 						</Box>
 						<Button bg={"teal.700"} color={"white"}>
@@ -116,8 +116,8 @@ const CartPage = () => {
 										objectFit='cover'
 									/>
 									<HStack justifyContent={"space-evenly"}>
-										<Badge colorPalette={"blue"}>{pro.price}$</Badge>
-										<Badge colorPalette={"pink"}>{pro.category.title}</Badge>
+										<Badge colorPalette={"red"}>{pro.price}$</Badge>
+										<Badge colorPalette={"teal"}>{pro.category.title}</Badge>
 									</HStack>
 								</VStack>
 							</Table.Cell>
@@ -127,13 +127,19 @@ const CartPage = () => {
 									<IconButton
 										size='xs'
 										aria-label='decrease quantity'
-										color={"red.700"}>
+										color={"red.700"}
+										variant={"outline"}
+										borderWidth={"1px"}
+										borderColor={"red.700"}>
 										<FaMinus />
 									</IconButton>
 									<IconButton
 										size='xs'
 										aria-label='increase quantity'
-										color='teal.600'>
+										color='teal.600'
+										variant={"outline"}
+										borderWidth={"1px"}
+										borderColor={"teal.600"}>
 										<FaPlus />
 									</IconButton>
 								</HStack>
