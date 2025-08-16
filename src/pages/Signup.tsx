@@ -23,7 +23,7 @@ const SignupPage = () => {
 				<Heading
 					fontSize={"4xl"}
 					color={colorMode === "light" ? "teal.600" : "teal.600"}>
-					Sign in to your account
+					Create a new account
 				</Heading>
 
 				<Fieldset.Root
