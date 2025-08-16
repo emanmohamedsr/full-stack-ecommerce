@@ -73,10 +73,10 @@ const AboutPage = () => {
 			<Stack gap={4} align='center' textAlign='center'>
 				<Text
 					textTransform={"uppercase"}
-					color={"blue.400"}
+					color={"teal.400"}
 					fontWeight={600}
 					fontSize={"sm"}
-					bg={colorMode === "light" ? "blue.50" : "blue.900"}
+					bg={colorMode === "light" ? "teal.50" : "teal.900"}
 					p={2}
 					alignSelf={"flex-start"}
 					rounded={"md"}>
