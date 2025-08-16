@@ -2,14 +2,15 @@
 
 import {
 	Box,
+	Button,
 	Center,
 	Flex,
 	HStack,
 	IconButton,
 	Image,
-	Link as ChakraLink,
 	Portal,
 	Stack,
+	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { useColorMode } from "@/hooks/useColorMode";
@@ -22,7 +23,8 @@ import Logo1 from "@/assets/logo1.svg";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoCloseOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-
+import { CgProfile } from "react-icons/cg";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 interface Props {
 	children: React.ReactNode;
 }
@@ -31,23 +33,20 @@ const MyChakraNavLink = (props: Props) => {
 	const { colorMode } = useColorMode();
 	const { children } = props;
 	return (
-		<ChakraLink
-			as='a'
+		<Box
 			px={2}
 			py={1}
 			rounded={"md"}
 			_hover={{
 				textDecoration: "none",
-				bg: colorMode === "light" ? "gray.100" : "gray.900",
-			}}
-			href={children === "Dashboard" ? "/" : `/${children}`}>
+				bg: colorMode === "light" ? "teal.100" : "teal.700",
+			}}>
 			{children}
-		</ChakraLink>
+		</Box>
 	);
 };
 
 const Navbar = () => {
-	const Links = ["Link0", "Link1", "Link2"];
 	const { colorMode } = useColorMode();
 	const { open, onOpen, onClose } = useDisclosure();
 	return (
@@ -84,9 +83,35 @@ const Navbar = () => {
 						</Link>
 						<HStack as={"nav"} gap={4} display={{ base: "none", md: "flex" }}>
 							<HStack as={"nav"} gap={4} display={{ base: "none", md: "flex" }}>
-								{Links.map((link) => (
-									<MyChakraNavLink key={link}>{link}</MyChakraNavLink>
-								))}
+								<Link to='/dashboard'>
+									<MyChakraNavLink>Dashboard</MyChakraNavLink>
+								</Link>
+								<Link to='/about'>
+									<MyChakraNavLink>About</MyChakraNavLink>
+								</Link>
+								<Link to='/cart'>
+									<MyChakraNavLink>
+										<Box position={"relative"}>
+											<AiOutlineShoppingCart />
+											<Box
+												as='span'
+												position={"absolute"}
+												boxSize={"18px"}
+												display={"flex"}
+												alignItems={"center"}
+												justifyContent={"center"}
+												top={"-15px"}
+												right={"-15px"}
+												rounded={"full"}
+												bg={colorMode === "light" ? "red.200" : "red.700"}
+												p={2}
+												color={colorMode === "light" ? "black" : "gray.200"}
+												fontSize='xs'>
+												1
+											</Box>
+										</Box>
+									</MyChakraNavLink>
+								</Link>
 							</HStack>
 						</HStack>
 					</HStack>
@@ -115,27 +140,83 @@ const Navbar = () => {
 												</Avatar.Root>
 											</Center>
 											<Center mb={2}>
-												<p>Eman Soliman</p>
+												<Text>Eman Soliman</Text>
 											</Center>
 											<Menu.Separator />
-											<Menu.Item value='settings'>Account Settings</Menu.Item>
+											<Menu.Item
+												value='profile'
+												color={colorMode === "light" ? "teal.700" : "teal.400"}>
+												<Link to='/profile'>
+													<Box display={"flex"} alignItems={"center"} gap={2}>
+														<CgProfile />
+														Profile
+													</Box>
+												</Link>
+											</Menu.Item>
 											<Menu.Item value='logout' color={"red.600"}>
-												<TbLogout2 />
-												Logout
+												<Link to='/logout'>
+													<Box display={"flex"} alignItems={"center"} gap={2}>
+														<TbLogout2 />
+														Logout
+													</Box>
+												</Link>
 											</Menu.Item>
 										</Menu.Content>
 									</Menu.Positioner>
 								</Portal>
 							</Menu.Root>
+
+							<HStack spaceX={1} ml={4}>
+								<Link to='/login'>
+									<Button
+										variant='outline'
+										size='xs'
+										md={{ width: "100px", height: "40px", fontSize: "16px" }}>
+										Log in
+									</Button>
+								</Link>
+								<Link to='/signup'>
+									<Button
+										md={{ width: "100px", height: "40px", fontSize: "16px" }}
+										variant='solid'
+										bg={"teal.700"}
+										color={"white"}
+										size='xs'>
+										Sign up
+									</Button>
+								</Link>
+							</HStack>
 						</Stack>
 					</Flex>
 				</Flex>
 				{open ? (
 					<Box pb={4} display={{ md: "none" }}>
 						<Stack as={"nav"} gap={4}>
-							{Links.map((link) => (
-								<MyChakraNavLink key={link}>{link}</MyChakraNavLink>
-							))}
+							<Link to='/dashboard'>
+								<MyChakraNavLink>Dashboard</MyChakraNavLink>
+							</Link>
+							<Link to='/about'>
+								<MyChakraNavLink>About</MyChakraNavLink>
+							</Link>
+							<Link to='/cart'>
+								<MyChakraNavLink>
+									<Box display={"flex"} alignItems={"center"} gap={2}>
+										<AiOutlineShoppingCart />
+										<Text
+											rounded={"full"}
+											boxSize={"18px"}
+											display={"flex"}
+											alignItems={"center"}
+											justifyContent={"center"}
+											bg={colorMode === "light" ? "red.200" : "red.700"}
+											p={2}
+											color={colorMode === "light" ? "black" : "gray.200"}
+											fontSize={"xs"}>
+											1
+										</Text>
+									</Box>
+								</MyChakraNavLink>
+							</Link>
 						</Stack>
 					</Box>
 				) : null}
