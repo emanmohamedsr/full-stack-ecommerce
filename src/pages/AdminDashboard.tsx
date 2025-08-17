@@ -1,5 +1,11 @@
+import Sidebar from "@/components/layout/Sidebar";
+
 const AdminDashboardPage = () => {
-	return <div>AdminDashboard Page</div>;
+	return (
+		<div>
+			<Sidebar />
+		</div>
+	);
 };
 
 export default AdminDashboardPage;

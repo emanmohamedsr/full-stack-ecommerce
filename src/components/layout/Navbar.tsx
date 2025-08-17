@@ -18,12 +18,12 @@ import { Menu } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/react";
 import { ColorModeButton } from "../ui/color-mode";
 import { TbLogout2 } from "react-icons/tb";
+import { CgProfile } from "react-icons/cg";
 import Logo0 from "@/assets/logo.svg";
 import Logo1 from "@/assets/logo1.svg";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoCloseOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import { CgProfile } from "react-icons/cg";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 interface Props {
 	children: React.ReactNode;
@@ -83,8 +83,8 @@ const Navbar = () => {
 						</Link>
 						<HStack as={"nav"} gap={4} display={{ base: "none", md: "flex" }}>
 							<HStack as={"nav"} gap={4} display={{ base: "none", md: "flex" }}>
-								<Link to='/dashboard'>
-									<MyChakraNavLink>Dashboard</MyChakraNavLink>
+								<Link to='/admin/dashboard'>
+									<MyChakraNavLink>Admin Dashboard</MyChakraNavLink>
 								</Link>
 								<Link to='/about'>
 									<MyChakraNavLink>About</MyChakraNavLink>
@@ -192,8 +192,8 @@ const Navbar = () => {
 				{open ? (
 					<Box pb={4} display={{ md: "none" }}>
 						<Stack as={"nav"} gap={4}>
-							<Link to='/dashboard'>
-								<MyChakraNavLink>Dashboard</MyChakraNavLink>
+							<Link to='/admin/dashboard'>
+								<MyChakraNavLink>Admin Dashboard</MyChakraNavLink>
 							</Link>
 							<Link to='/about'>
 								<MyChakraNavLink>About</MyChakraNavLink>
