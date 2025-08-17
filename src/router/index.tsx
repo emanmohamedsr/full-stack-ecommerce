@@ -30,7 +30,10 @@ const router = createBrowserRouter(
 				<Route path='signup' element={<SignupPage />} />
 				<Route path='products/:id' element={<ProductPage />} />
 			</Route>
-			<Route path='/admin' element={<RootAdminLayout />}>
+			<Route
+				path='/admin'
+				element={<RootAdminLayout />}
+				errorElement={<ErrorHandler />}>
 				<Route path='dashboard' element={<AdminDashboardPage />} />
 			</Route>
 			<Route path='*' element={<PageNotFound />} />
