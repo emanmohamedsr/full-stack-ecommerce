@@ -8,7 +8,7 @@ const RootAdminLayout = () => {
 			<Sidebar />
 			<Box
 				pos={"absolute"}
-				top={"80px"}
+				top={"64px"}
 				left={{ base: 0, md: 60 }}
 				w={{ base: "full", md: "calc(100% - 240px)" }}>
 				<Outlet />

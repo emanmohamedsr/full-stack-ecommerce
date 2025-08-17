@@ -1,15 +1,5 @@
-import { useColorMode } from "@/hooks/useColorMode";
-import {
-	Box,
-	Button,
-	Center,
-	Flex,
-	Heading,
-	Image,
-	Stack,
-	Table,
-	Text,
-} from "@chakra-ui/react";
+import ProductCell from "@/components/ProductCell";
+import { Button, Flex, Table } from "@chakra-ui/react";
 
 const items = [
 	{
@@ -57,14 +47,13 @@ const items = [
 ];
 
 const AdminDashboardPage = () => {
-	const { colorMode } = useColorMode();
 	return (
 		<Table.ScrollArea borderWidth='1px' borderTop={"none"} maxW='100%'>
 			<Table.Root size='sm' variant='line' striped>
 				<Table.Header>
 					<Table.Row>
 						<Table.ColumnHeader textAlign={"center"} minW='300px'>
-							itemduct
+							Product
 						</Table.ColumnHeader>
 						<Table.ColumnHeader textAlign={"center"} minW='200px'>
 							Actions
@@ -75,74 +64,12 @@ const AdminDashboardPage = () => {
 					{items.map((item) => (
 						<Table.Row key={item.id}>
 							<Table.Cell>
-								<Center py={12}>
-									<Box
-										role={"group"}
-										p={6}
-										maxW={"250px"}
-										w={"full"}
-										bg={colorMode === "light" ? "white" : "gray.800"}
-										boxShadow={"2xl"}
-										rounded={"lg"}
-										pos={"relative"}
-										zIndex={1}>
-										<Box
-											rounded={"lg"}
-											mt={-12}
-											pos={"relative"}
-											height={"150px"}
-											_after={{
-												transition: "all .3s ease",
-												content: '""',
-												w: "full",
-												h: "full",
-												pos: "absolute",
-												top: 5,
-												left: 0,
-												backgroundImage: `url(${item.thumbnail.url})`,
-												filter: "blur(15px)",
-												zIndex: -1,
-											}}
-											_groupHover={{
-												_after: {
-													filter: "blur(20px)",
-												},
-											}}>
-											<Image
-												rounded={"lg"}
-												height={"180px"}
-												width={282}
-												objectFit={"cover"}
-												src={item.thumbnail.url}
-												alt='#'
-											/>
-										</Box>
-										<Stack pt={10} align={"center"} maxW={"250px"}>
-											<Text
-												color={"gray.500"}
-												fontSize={"sm"}
-												textTransform={"uppercase"}>
-												{item.category.title}
-											</Text>
-											<Heading
-												fontSize={"2xl"}
-												fontFamily={"body"}
-												fontWeight={500}
-												textWrap={{ base: "wrap", lg: "nowrap" }}
-												textAlign={"center"}>
-												{item.title}
-											</Heading>
-											<Stack direction={"row"} align={"center"}>
-												<Text
-													fontWeight={600}
-													fontSize={"xl"}
-													color={"teal.600"}>
-													${item.price}
-												</Text>
-											</Stack>
-										</Stack>
-									</Box>
-								</Center>
+								<ProductCell
+									thumbnail={item.thumbnail.url}
+									title={item.title}
+									price={item.price}
+									category={item.category.title}
+								/>
 							</Table.Cell>
 							<Table.Cell>
 								<Flex align='center' justify='center' gap={2} wrap={"wrap"}>
