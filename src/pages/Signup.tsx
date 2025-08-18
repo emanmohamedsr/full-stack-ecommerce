@@ -10,8 +10,28 @@ import {
 	Button,
 	Heading,
 } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { SignupSchema } from "@/validation/FormSchema";
+
+interface ISignupUser {
+	username: string;
+	email: string;
+	password: string;
+}
 
 const SignupPage = () => {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<ISignupUser>({
+		resolver: yupResolver(SignupSchema),
+	});
+
+	const handleSignupUser = (data: ISignupUser) => {
+		console.log("Signing up user:", data);
+	};
 	const { colorMode } = useColorMode();
 	return (
 		<Flex
@@ -26,56 +46,71 @@ const SignupPage = () => {
 					Create a new account
 				</Heading>
 
-				<Fieldset.Root
-					size='lg'
-					maxW='md'
-					shadow={"md"}
-					bg={colorMode === "light" ? "gray.50" : "gray.700"}
-					p={6}
-					rounded='md'>
-					<Stack gap={4}>
-						<Fieldset.Legend>Contact details</Fieldset.Legend>
-						<Fieldset.HelperText>
-							Please provide your contact details below.
-						</Fieldset.HelperText>
-					</Stack>
-
-					<Fieldset.Content>
-						<Field.Root>
-							<Field.Label>Username</Field.Label>
-							<Input name='username' type='text' />
-							<Field.HelperText color={"red.600"} fontSize={"sm"}>
-								<Field.ErrorIcon w={4} mr={2} />
-								error
-							</Field.HelperText>
-						</Field.Root>
-						<Field.Root>
-							<Field.Label>Email address</Field.Label>
-							<Input name='email' type='email' />
-							<Field.HelperText color={"red.600"} fontSize={"sm"}>
-								<Field.ErrorIcon w={4} mr={2} />
-								error
-							</Field.HelperText>
-						</Field.Root>
-						<Field.Root>
-							<Field.Label>Password</Field.Label>
-							<Input name='password' type='password' />
-							<Field.HelperText color={"red.600"} fontSize={"sm"}>
-								<Field.ErrorIcon w={4} mr={2} />
-								error
-							</Field.HelperText>
-						</Field.Root>
-					</Fieldset.Content>
-
-					<Button
-						type='submit'
-						alignSelf='flex-start'
-						mt={5}
-						bg='teal.700'
-						color='white'>
-						Submit
-					</Button>
-				</Fieldset.Root>
+				<form onSubmit={handleSubmit(handleSignupUser)}>
+					<Fieldset.Root
+						size='lg'
+						maxW='md'
+						shadow={"md"}
+						bg={colorMode === "light" ? "gray.50" : "gray.700"}
+						p={6}
+						rounded='md'>
+						<Stack gap={4}>
+							<Fieldset.Legend>Contact details</Fieldset.Legend>
+							<Fieldset.HelperText>
+								Please provide your contact details below.
+							</Fieldset.HelperText>
+						</Stack>
+						<Fieldset.Content maxW={"100%"}>
+							<Field.Root>
+								<Field.Label>username</Field.Label>
+								<Input type='text' {...register("username")} />
+								{errors.username && (
+									<Field.HelperText
+										maxW={"300px"}
+										color={colorMode === "light" ? "red.600" : "red.300"}
+										fontSize={"sm"}>
+										<Field.ErrorIcon w={4} mr={2} />
+										{errors.username.message}
+									</Field.HelperText>
+								)}
+							</Field.Root>
+							<Field.Root>
+								<Field.Label>Email address</Field.Label>
+								<Input type='email' {...register("email")} />
+								{errors.email && (
+									<Field.HelperText
+										maxW={"300px"}
+										color={colorMode === "light" ? "red.600" : "red.300"}
+										fontSize={"sm"}>
+										<Field.ErrorIcon w={4} mr={2} />
+										{errors.email.message}
+									</Field.HelperText>
+								)}
+							</Field.Root>
+							<Field.Root>
+								<Field.Label>Password</Field.Label>
+								<Input type='password' {...register("password")} />
+								{errors.password && (
+									<Field.HelperText
+										maxW={"300px"}
+										color={colorMode === "light" ? "red.600" : "red.300"}
+										fontSize={"sm"}>
+										<Field.ErrorIcon w={4} mr={2} />
+										{errors.password.message}
+									</Field.HelperText>
+								)}
+							</Field.Root>
+						</Fieldset.Content>
+						<Button
+							type='submit'
+							alignSelf='flex-start'
+							mt={5}
+							bg='teal.700'
+							color='white'>
+							Submit
+						</Button>
+					</Fieldset.Root>
+				</form>
 			</Stack>
 		</Flex>
 	);
