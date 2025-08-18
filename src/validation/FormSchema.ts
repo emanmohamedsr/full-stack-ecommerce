@@ -1,4 +1,5 @@
 import * as yup from "yup";
+
 export const LoginSchema = yup.object({
 	email: yup
 		.string()
@@ -13,6 +14,23 @@ export const LoginSchema = yup.object({
 			"Password must contain uppercase, lowercase letter, and numbers",
 		)
 		.required("Password is required"),
+});
+
+export const AdminLoginSchema = yup.object({
+	email: yup
+		.string()
+		.email("Invalid email address")
+		.matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Invalid email address")
+		.required("Email is required"),
+	password: yup
+		.string()
+		.min(6, "Password must be at least 6 characters")
+		.matches(
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/,
+			"Password must contain uppercase, lowercase letter, and numbers",
+		)
+		.required("Password is required"),
+	adminSecretCode: yup.string().required("Admin secret code is required"),
 });
 
 export const SignupSchema = yup.object({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useColorMode } from "@/hooks/useColorMode";
-import { LoginSchema } from "@/validation/FormSchema";
+import { AdminLoginSchema } from "@/validation/FormSchema";
 import {
 	Flex,
 	Input,
@@ -17,22 +17,23 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 
-interface ILoginUser {
+interface ILoginAdmin {
 	email: string;
 	password: string;
+	adminSecretCode: string;
 }
 
-const LoginPage = () => {
+const AdminLoginPage = () => {
 	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<ILoginUser>({
-		resolver: yupResolver(LoginSchema),
+	} = useForm<ILoginAdmin>({
+		resolver: yupResolver(AdminLoginSchema),
 	});
 
-	const handleLoginUser = (data: ILoginUser) => {
+	const handleLoginUser = (data: ILoginAdmin) => {
 		console.log("Logging in user:", data);
 	};
 
@@ -47,8 +48,8 @@ const LoginPage = () => {
 			<Stack mx={"auto"} maxW={"xl"} gap={6} spaceY={6} px={6}>
 				<Heading
 					fontSize={"4xl"}
-					color={colorMode === "light" ? "teal.600" : "teal.600"}>
-					Sign in to your account
+					color={colorMode === "light" ? "yellow.600" : "yellow.600"}>
+					Sign in to your admin account
 				</Heading>
 
 				<form onSubmit={handleSubmit(handleLoginUser)}>
@@ -63,7 +64,7 @@ const LoginPage = () => {
 						<Stack gap={4}>
 							<Fieldset.Legend>Contact details</Fieldset.Legend>
 							<Fieldset.HelperText>
-								Please provide your contact details below.
+								Please provide your contact Admin details below.
 							</Fieldset.HelperText>
 						</Stack>
 
@@ -94,6 +95,19 @@ const LoginPage = () => {
 									</Field.HelperText>
 								)}
 							</Field.Root>
+							<Field.Root>
+								<Field.Label>Admin Secret Code</Field.Label>
+								<Input type='text' {...register("adminSecretCode")} />
+								{errors.adminSecretCode && (
+									<Field.HelperText
+										maxW={"300px"}
+										color={colorMode === "light" ? "red.600" : "red.300"}
+										fontSize={"sm"}>
+										<Field.ErrorIcon w={4} mr={2} />
+										{errors.adminSecretCode.message}
+									</Field.HelperText>
+								)}
+							</Field.Root>
 						</Fieldset.Content>
 
 						<Box
@@ -104,7 +118,7 @@ const LoginPage = () => {
 							opacity={0}
 							w={"20px"}
 							h={"20px"}
-							bg={"yellow.700"}
+							bg={"red.700"}
 							borderRadius={"full"}
 							_hover={{ opacity: 0.8 }}>
 							<SkeletonCircle size='100%' />
@@ -114,7 +128,7 @@ const LoginPage = () => {
 							type='submit'
 							alignSelf='flex-start'
 							mt={5}
-							bg='teal.700'
+							bg='yellow.700'
 							color='white'>
 							Submit
 						</Button>
@@ -125,4 +139,4 @@ const LoginPage = () => {
 	);
 };
 
-export default LoginPage;
+export default AdminLoginPage;

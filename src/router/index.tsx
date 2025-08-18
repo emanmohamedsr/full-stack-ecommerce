@@ -3,6 +3,7 @@ import HomePage from "@/pages";
 import AboutPage from "@/pages/About";
 import AdminDashboardPage from "@/pages/AdminDashboard";
 import RootAdminLayout from "@/pages/AdminLayout";
+import AdminLoginPage from "@/pages/AdminLogin";
 import CartPage from "@/pages/Cart";
 import RootLayout from "@/pages/Layout";
 import LoginPage from "@/pages/Login";
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
 				<Route path='cart' element={<CartPage />} />
 				<Route path='logout' element={<LogoutPage />} />
 				<Route path='login' element={<LoginPage />} />
+				<Route path='admin-login' element={<AdminLoginPage />} />
 				<Route path='signup' element={<SignupPage />} />
 				<Route path='products/:id' element={<ProductPage />} />
 			</Route>
