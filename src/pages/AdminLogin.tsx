@@ -12,6 +12,8 @@ import {
 	Heading,
 	Box,
 	SkeletonCircle,
+	HStack,
+	Checkbox,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -45,7 +47,7 @@ const AdminLoginPage = () => {
 			align={"center"}
 			justify={"center"}
 			bg={colorMode === "light" ? "white" : "gray.800"}>
-			<Stack mx={"auto"} maxW={"xl"} gap={6} spaceY={6} px={6}>
+			<Stack mx={"auto"} maxW={"xl"} gap={4} spaceY={2} px={6}>
 				<Heading
 					fontSize={"4xl"}
 					color={colorMode === "light" ? "yellow.600" : "yellow.600"}>
@@ -61,7 +63,7 @@ const AdminLoginPage = () => {
 						bg={colorMode === "light" ? "gray.50" : "gray.700"}
 						p={6}
 						rounded='md'>
-						<Stack gap={4}>
+						<Stack gap={2}>
 							<Fieldset.Legend>Contact details</Fieldset.Legend>
 							<Fieldset.HelperText>
 								Please provide your contact Admin details below.
@@ -109,6 +111,20 @@ const AdminLoginPage = () => {
 								)}
 							</Field.Root>
 						</Fieldset.Content>
+
+						<HStack w={"100%"} justifyContent={"space-between"}>
+							<Checkbox.Root>
+								<Checkbox.HiddenInput />
+								<Checkbox.Control
+									color={colorMode === "light" ? "yellow.600" : "white"}
+									bg={colorMode === "light" ? "yellow.100" : "yellow.700"}
+								/>
+								<Checkbox.Label>Remember me</Checkbox.Label>
+							</Checkbox.Root>
+							<Button variant={"plain"} color={"yellow.600"}>
+								Forgot Password?
+							</Button>
+						</HStack>
 
 						<Box
 							onClick={() => navigate("/admin-login")}

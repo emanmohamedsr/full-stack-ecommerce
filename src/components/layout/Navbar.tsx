@@ -172,7 +172,7 @@ const Navbar = () => {
 										variant='outline'
 										size='xs'
 										md={{ width: "100px", height: "40px", fontSize: "16px" }}>
-										Log in
+										Sign in
 									</Button>
 								</Link>
 								<Link to='/signup'>

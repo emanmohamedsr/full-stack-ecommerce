@@ -1,12 +1,14 @@
 import { productsApi } from "@/services/products";
+import { UserApi } from "@/services/User";
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 export const store = configureStore({
 	reducer: {
 		[productsApi.reducerPath]: productsApi.reducer,
+		[UserApi.reducerPath]: UserApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware().concat(productsApi.middleware),
+		getDefaultMiddleware().concat(productsApi.middleware, UserApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

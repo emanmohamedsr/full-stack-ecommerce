@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const LoginSchema = yup.object({
-	email: yup
+	identifier: yup
 		.string()
 		.email("Invalid email address")
 		.matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Invalid email address")
@@ -17,7 +17,7 @@ export const LoginSchema = yup.object({
 });
 
 export const AdminLoginSchema = yup.object({
-	email: yup
+	identifier: yup
 		.string()
 		.email("Invalid email address")
 		.matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Invalid email address")

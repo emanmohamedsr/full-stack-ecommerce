@@ -24,10 +24,11 @@ export interface IProduct {
 	category: ICategory[];
 }
 
-export interface IAxiosError {
-	response: {
-		data: {
-			message: string;
+export interface IError {
+	data: {
+		error?: {
+			status?: number;
+			message?: string;
 		};
 	};
 }
