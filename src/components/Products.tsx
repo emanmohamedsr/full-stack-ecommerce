@@ -1,10 +1,10 @@
 import { HStack } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
-import { useGetProductsQuery } from "@/services/products";
-import type { IProduct } from "@/interfaces";
+import { useGetProductsQuery } from "@/services/productsApi";
 import ProductsSkeleton from "./ProductsSkeleton";
 import EmptyProductsState from "./EmptyProductsState";
 import { VscEmptyWindow } from "react-icons/vsc";
+import type { IProduct } from "@/interfaces/Product";
 
 const Products = () => {
 	const { isError, error, isLoading, data } = useGetProductsQuery({});

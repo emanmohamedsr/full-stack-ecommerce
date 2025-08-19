@@ -11,11 +11,11 @@ import { GiMoneyStack } from "react-icons/gi";
 import { BsStack } from "react-icons/bs";
 import { TbCategory2 } from "react-icons/tb";
 import Product from "../assets/product.svg";
-import { useGetOneProductQuery } from "@/services/products";
+import { useGetOneProductQuery } from "@/services/productsApi";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductPageSkeleton from "@/components/ProductPageSkeleton";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
-import type { ICategory } from "@/interfaces";
+import type { ICategory } from "@/interfaces/Product";
 const ProductPage = () => {
 	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();

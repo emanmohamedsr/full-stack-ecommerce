@@ -1,7 +1,6 @@
 "use client";
 
 import { useColorMode } from "@/hooks/useColorMode";
-import type { ColorMode } from "@/types";
 import type { IconButtonProps, SpanProps } from "@chakra-ui/react";
 import { ClientOnly, IconButton, Skeleton, Span } from "@chakra-ui/react";
 import { ThemeProvider } from "next-themes";
@@ -16,12 +15,6 @@ export function ColorModeProvider(props: ColorModeProviderProps) {
 	return (
 		<ThemeProvider attribute='class' disableTransitionOnChange {...props} />
 	);
-}
-
-export interface UseColorModeReturn {
-	colorMode: ColorMode;
-	setColorMode: (colorMode: ColorMode) => void;
-	toggleColorMode: () => void;
 }
 
 export function ColorModeIcon() {

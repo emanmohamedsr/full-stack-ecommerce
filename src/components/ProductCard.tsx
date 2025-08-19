@@ -1,7 +1,7 @@
-import type { IProduct } from "@/interfaces";
 import { Box, Button, Card, Image } from "@chakra-ui/react";
 import Product from "../assets/product.svg";
 import { useNavigate } from "react-router-dom";
+import type { IProduct } from "@/interfaces/Product";
 
 interface IProps {
 	product: IProduct;

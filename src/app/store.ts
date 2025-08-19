@@ -1,5 +1,5 @@
-import { productsApi } from "@/services/products";
-import { UserApi } from "@/services/User";
+import { productsApi } from "@/services/productsApi";
+import { UserApi } from "@/services/UserApi";
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 export const store = configureStore({

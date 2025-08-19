@@ -19,9 +19,14 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { useLoginUserMutation } from "@/services/User";
+import { useLoginUserMutation } from "@/services/UserApi";
 import { toaster } from "@/config/toaster";
-import type { IError } from "@/interfaces";
+import type { IError } from "@/interfaces/Error";
+import CookieService from "@/services/Cookie";
+import { useState } from "react";
+import type { CookieSetOptions } from "universal-cookie";
+import type { IResponse } from "@/interfaces/User";
+
 interface ILoginUser {
 	identifier: string;
 	password: string;
@@ -29,7 +34,8 @@ interface ILoginUser {
 
 const LoginPage = () => {
 	const [loginUser, { isLoading }] = useLoginUserMutation();
-
+	const [rememberMe, setRememberMe] = useState<boolean>(false);
+	console.log(rememberMe);
 	const navigate = useNavigate();
 	const {
 		register,
@@ -41,10 +47,21 @@ const LoginPage = () => {
 
 	const handleLoginUser = async (data: ILoginUser) => {
 		try {
-			const { user } = await loginUser(data).unwrap();
+			const res: IResponse = await loginUser(data).unwrap();
+			const options: CookieSetOptions = {
+				path: "/",
+			};
+			if (rememberMe) {
+				const date = new Date();
+				const IN_DAYS = 3;
+				const EXPIRES_IN_DAYS = 1000 * 60 * 60 * 24 * IN_DAYS;
+				date.setTime(date.getTime() + EXPIRES_IN_DAYS);
+				options.expires = date;
+			}
+			CookieService.set("jwt", res.jwt, options);
 			toaster.success({
 				title: "Login successful",
-				description: `Welcome back, ${user.username}!`,
+				description: `Welcome back, ${res.user.username}!`,
 			});
 		} catch (e) {
 			const errorObj = e as IError;
@@ -116,7 +133,9 @@ const LoginPage = () => {
 						</Fieldset.Content>
 
 						<HStack w={"100%"} justifyContent={"space-between"}>
-							<Checkbox.Root>
+							<Checkbox.Root
+								checked={rememberMe}
+								onCheckedChange={() => setRememberMe((prev) => !prev)}>
 								<Checkbox.HiddenInput />
 								<Checkbox.Control
 									color={colorMode === "light" ? "teal.600" : "white"}

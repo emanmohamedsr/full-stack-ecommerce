@@ -1,4 +1,4 @@
-import type { UseColorModeReturn } from "@/interfaces";
+import type { UseColorModeReturn } from "@/interfaces/ColorMode";
 import type { ColorMode } from "@/types";
 import { useTheme } from "next-themes";
 

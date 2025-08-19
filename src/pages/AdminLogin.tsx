@@ -20,7 +20,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 
 interface ILoginAdmin {
-	email: string;
+	identifier: string;
 	password: string;
 	adminSecretCode: string;
 }
@@ -35,8 +35,8 @@ const AdminLoginPage = () => {
 		resolver: yupResolver(AdminLoginSchema),
 	});
 
-	const handleLoginUser = (data: ILoginAdmin) => {
-		console.log("Logging in user:", data);
+	const handleLoginAdmin = (data: ILoginAdmin) => {
+		console.log("Logging in admin:", data);
 	};
 
 	const { colorMode } = useColorMode();
@@ -54,7 +54,7 @@ const AdminLoginPage = () => {
 					Sign in to your admin account
 				</Heading>
 
-				<form onSubmit={handleSubmit(handleLoginUser)}>
+				<form onSubmit={handleSubmit(handleLoginAdmin)}>
 					<Fieldset.Root
 						mx={"auto"}
 						size='lg'
@@ -73,14 +73,14 @@ const AdminLoginPage = () => {
 						<Fieldset.Content maxW={"100%"}>
 							<Field.Root>
 								<Field.Label>Email address</Field.Label>
-								<Input type='email' {...register("email")} />
-								{errors.email && (
+								<Input type='email' {...register("identifier")} />
+								{errors.identifier && (
 									<Field.HelperText
 										maxW={"300px"}
 										color={colorMode === "light" ? "red.600" : "red.300"}
 										fontSize={"sm"}>
 										<Field.ErrorIcon w={4} mr={2} />
-										{errors.email.message}
+										{errors.identifier.message}
 									</Field.HelperText>
 								)}
 							</Field.Root>
