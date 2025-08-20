@@ -19,6 +19,8 @@ import {
 	Stack,
 	Image,
 	HStack,
+	Spinner,
+	VStack,
 } from "@chakra-ui/react";
 import { FiHome, FiMenu } from "react-icons/fi";
 import type { IconType } from "react-icons";
@@ -43,6 +45,7 @@ interface NavItemProps extends FlexProps {
 }
 
 interface MobileProps extends FlexProps {
+	user: IUser;
 	onOpen: () => void;
 }
 
@@ -125,7 +128,7 @@ const NavItem = ({ icon, children, path, ...rest }: NavItemProps) => {
 	);
 };
 
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const MobileNav = ({ user, onOpen, ...rest }: MobileProps) => {
 	const { colorMode } = useColorMode();
 	return (
 		<Flex
@@ -169,8 +172,10 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 				<Menu.Root positioning={{ placement: "bottom-end", gutter: 6 }}>
 					<Menu.Trigger rounded='full' focusRing='outside' cursor={"pointer"}>
 						<Avatar.Root size='sm'>
-							<Avatar.Fallback name='Eman Soliman' />
-							<Avatar.Image src='https://api.dicebear.com/7.x/adventurer/svg?seed=Emoo' />
+							<Avatar.Fallback name={user.username} />
+							<Avatar.Image
+								src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user.username}`}
+							/>
 						</Avatar.Root>
 					</Menu.Trigger>
 					<Portal>
@@ -178,12 +183,14 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 							<Menu.Content>
 								<Center py={2}>
 									<Avatar.Root>
-										<Avatar.Fallback name='Eman Soliman' />
-										<Avatar.Image src='https://api.dicebear.com/7.x/adventurer/svg?seed=Emoo' />
+										<Avatar.Fallback name={user.username} />
+										<Avatar.Image
+											src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user.username}`}
+										/>
 									</Avatar.Root>
 								</Center>
 								<Center mb={2}>
-									<Text>Eman Soliman</Text>
+									<Text>{user.username}</Text>
 								</Center>
 								<Menu.Separator />
 								<Menu.Item
@@ -213,24 +220,114 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 	);
 };
 
+import cookieService from "@/services/Cookie";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/app/store";
+import { useLazyGetMeQuery } from "@/services/UserApi";
+import { useEffect, useState } from "react";
+import type { IUser } from "@/interfaces/User";
+import { clearSession, setUserSession } from "@/app/features/authSlice";
+
 const Sidebar = () => {
 	const { open, onOpen, onClose } = useDisclosure();
 	const { colorMode } = useColorMode();
-	return (
-		<Box minH='100vh' bg={colorMode === "light" ? "gray.100" : "gray.900"}>
-			<SidebarContent
-				onClose={() => onClose}
-				display={{ base: "none", md: "block" }}
-			/>
-			<Drawer.Root open={open} size='full'>
-				<DrawerContent>
-					<SidebarContent onClose={onClose} />
-				</DrawerContent>
-			</Drawer.Root>
-			<MobileNav onOpen={onOpen} />
-			<Box ml={{ base: 0, md: 60 }} p='4'></Box>
-		</Box>
-	);
+	const { token, user } = useSelector((state: RootState) => state.auth);
+	const dispatch = useDispatch();
+	const [triggerGetMe, { isLoading, isError, error }] = useLazyGetMeQuery();
+	const [isAdmin, setIsAdmin] = useState<boolean>(false);
+	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+	useEffect(() => {
+		let isMounted = true; // Flag to prevent state updates on unmounted component
+
+		const checkAuth = async () => {
+			// If we already have a token and user in store
+			if (token && user) {
+				if (isMounted) {
+					setIsAdmin(user.role?.name === "Admin");
+					setIsCheckingAuth(false);
+				}
+				return;
+			}
+
+			// Check if we have a token in cookies
+			const cookieToken = cookieService.get("ma7al_jwt");
+			if (cookieToken) {
+				try {
+					const res: IUser = await triggerGetMe(cookieToken).unwrap();
+					if (isMounted) {
+						dispatch(
+							setUserSession({
+								token: cookieToken,
+								user: res,
+							}),
+						);
+						setIsAdmin(res.role?.name === "Admin");
+					}
+				} catch (error) {
+					console.error("Auth check failed:", error);
+					cookieService.remove("ma7al_jwt");
+					dispatch(clearSession());
+					if (isMounted) {
+						setIsAdmin(false);
+					}
+				}
+			} else if (isMounted) {
+				setIsAdmin(false);
+			}
+
+			if (isMounted) setIsCheckingAuth(false);
+		};
+
+		checkAuth();
+
+		// Cleanup function
+		return () => {
+			isMounted = false;
+		};
+	}, [dispatch, token, user, triggerGetMe]);
+
+	if (isCheckingAuth || isLoading) {
+		return (
+			<VStack
+				position='absolute'
+				zIndex={1000}
+				top={0}
+				left={0}
+				right={0}
+				bottom={0}
+				bg='gray.600'
+				colorPalette='teal'
+				gap={4}
+				align='center'
+				justify='center'
+				height='100vh'
+				w={"100vw"}>
+				<Spinner color='teal.600' size='xl' />
+				<Text color='teal.600'>Checking authentication...</Text>
+			</VStack>
+		);
+	}
+	if (isError) {
+		throw error;
+	}
+	if (user && isAdmin) {
+		return (
+			<Box minH='100vh' bg={colorMode === "light" ? "gray.100" : "gray.900"}>
+				<SidebarContent
+					onClose={() => onClose}
+					display={{ base: "none", md: "block" }}
+				/>
+				<Drawer.Root open={open} size='full'>
+					<DrawerContent>
+						<SidebarContent onClose={onClose} />
+					</DrawerContent>
+				</Drawer.Root>
+				<MobileNav user={user} onOpen={onOpen} />
+				<Box ml={{ base: 0, md: 60 }} p='4'></Box>
+			</Box>
+		);
+	}
 };
 
 export default Sidebar;

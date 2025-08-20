@@ -58,7 +58,7 @@ const MyChakraNavLink = (props: Props) => {
 const Navbar = () => {
 	const { token, user } = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
-	const [triggerGetMe, { isLoading }] = useLazyGetMeQuery();
+	const [triggerGetMe, { isLoading, isError, error }] = useLazyGetMeQuery();
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 	const [isAdmin, setIsAdmin] = useState<boolean>(false);
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -119,7 +119,7 @@ const Navbar = () => {
 
 	const { colorMode } = useColorMode();
 	const { open, onOpen, onClose } = useDisclosure();
-	if (isCheckingAuth || isLoading)
+	if (isCheckingAuth || isLoading) {
 		return (
 			<VStack
 				position='absolute'
@@ -139,6 +139,10 @@ const Navbar = () => {
 				<Text color='teal.600'>Checking authentication...</Text>
 			</VStack>
 		);
+	}
+	if (isError) {
+		throw error;
+	}
 	return (
 		<>
 			<Box bg={colorMode === "light" ? "gray.100" : "gray.900"} px={4}>
