@@ -175,7 +175,7 @@ const Navbar = () => {
 							<HStack as={"nav"} gap={4} display={{ base: "none", md: "flex" }}>
 								{isAuthenticated && isAdmin && (
 									<Link to='/admin/dashboard'>
-										<MyChakraNavLink>Admin Dashboard</MyChakraNavLink>
+										<MyChakraNavLink>Admin-Dashboard</MyChakraNavLink>
 									</Link>
 								)}
 								<Link to='/about'>
@@ -219,8 +219,10 @@ const Navbar = () => {
 										focusRing='outside'
 										cursor={"pointer"}>
 										<Avatar.Root size='sm'>
-											<Avatar.Fallback name='Eman Soliman' />
-											<Avatar.Image src='https://api.dicebear.com/7.x/adventurer/svg?seed=Emoo' />
+											<Avatar.Fallback name={user?.username} />
+											<Avatar.Image
+												src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user?.username}`}
+											/>
 										</Avatar.Root>
 									</Menu.Trigger>
 									<Portal>
@@ -228,12 +230,14 @@ const Navbar = () => {
 											<Menu.Content>
 												<Center py={2}>
 													<Avatar.Root>
-														<Avatar.Fallback name='Eman Soliman' />
-														<Avatar.Image src='https://api.dicebear.com/7.x/adventurer/svg?seed=Emoo' />
+														<Avatar.Fallback name={user?.username} />
+														<Avatar.Image
+															src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${user?.username}`}
+														/>
 													</Avatar.Root>
 												</Center>
 												<Center mb={2}>
-													<Text>Eman Soliman</Text>
+													<Text>{user?.username}</Text>
 												</Center>
 												<Menu.Separator />
 												<Menu.Item
