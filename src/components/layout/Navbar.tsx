@@ -9,9 +9,11 @@ import {
 	IconButton,
 	Image,
 	Portal,
+	Spinner,
 	Stack,
 	Text,
 	useDisclosure,
+	VStack,
 } from "@chakra-ui/react";
 import { useColorMode } from "@/hooks/useColorMode";
 import { Menu } from "@chakra-ui/react";
@@ -25,6 +27,13 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoCloseOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import cookieService from "@/services/Cookie";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/app/store";
+import { useLazyGetMeQuery } from "@/services/UserApi";
+import type { IUser } from "@/interfaces/User";
+import { clearSession, setUserSession } from "@/app/features/authSlice";
+import { useEffect, useState } from "react";
 interface Props {
 	children: React.ReactNode;
 }
@@ -47,10 +56,89 @@ const MyChakraNavLink = (props: Props) => {
 };
 
 const Navbar = () => {
-	const isAuthenticated = true;
-	const isAdmin = true;
+	const { token, user } = useSelector((state: RootState) => state.auth);
+	const dispatch = useDispatch();
+	const [triggerGetMe, { isLoading }] = useLazyGetMeQuery();
+	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+	const [isAdmin, setIsAdmin] = useState<boolean>(false);
+	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+	useEffect(() => {
+		let isMounted = true; // Flag to prevent state updates on unmounted component
+
+		const checkAuth = async () => {
+			// If we already have a token and user in store
+			if (token && user) {
+				if (isMounted) {
+					setIsAuthenticated(true);
+					setIsAdmin(user.role?.name === "Admin");
+					setIsCheckingAuth(false);
+				}
+				return;
+			}
+
+			// Check if we have a token in cookies
+			const cookieToken = cookieService.get("ma7al_jwt");
+			if (cookieToken) {
+				try {
+					const res: IUser = await triggerGetMe(cookieToken).unwrap();
+					if (isMounted) {
+						dispatch(
+							setUserSession({
+								token: cookieToken,
+								user: res,
+							}),
+						);
+						setIsAuthenticated(true);
+						setIsAdmin(res.role?.name === "Admin");
+					}
+				} catch (error) {
+					console.error("Auth check failed:", error);
+					cookieService.remove("ma7al_jwt");
+					dispatch(clearSession());
+					if (isMounted) {
+						setIsAuthenticated(false);
+						setIsAdmin(false);
+					}
+				}
+			} else if (isMounted) {
+				setIsAuthenticated(false);
+				setIsAdmin(false);
+			}
+
+			if (isMounted) setIsCheckingAuth(false);
+		};
+
+		checkAuth();
+
+		// Cleanup function
+		return () => {
+			isMounted = false;
+		};
+	}, [dispatch, token, user, triggerGetMe]);
+
 	const { colorMode } = useColorMode();
 	const { open, onOpen, onClose } = useDisclosure();
+	if (isCheckingAuth || isLoading)
+		return (
+			<VStack
+				position='absolute'
+				zIndex={1000}
+				top={0}
+				left={0}
+				right={0}
+				bottom={0}
+				bg='gray.600'
+				colorPalette='teal'
+				gap={4}
+				align='center'
+				justify='center'
+				height='100vh'
+				w={"100vw"}>
+				<Spinner color='teal.600' size='xl' />
+				<Text color='teal.600'>Checking authentication...</Text>
+			</VStack>
+		);
 	return (
 		<>
 			<Box bg={colorMode === "light" ? "gray.100" : "gray.900"} px={4}>
