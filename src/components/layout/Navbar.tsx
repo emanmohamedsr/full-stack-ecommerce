@@ -47,6 +47,8 @@ const MyChakraNavLink = (props: Props) => {
 };
 
 const Navbar = () => {
+	const isAuthenticated = true;
+	const isAdmin = true;
 	const { colorMode } = useColorMode();
 	const { open, onOpen, onClose } = useDisclosure();
 	return (
@@ -83,9 +85,11 @@ const Navbar = () => {
 						</Link>
 						<HStack as={"nav"} gap={4} display={{ base: "none", md: "flex" }}>
 							<HStack as={"nav"} gap={4} display={{ base: "none", md: "flex" }}>
-								<Link to='/admin/dashboard'>
-									<MyChakraNavLink>Admin Dashboard</MyChakraNavLink>
-								</Link>
+								{isAuthenticated && isAdmin && (
+									<Link to='/admin/dashboard'>
+										<MyChakraNavLink>Admin Dashboard</MyChakraNavLink>
+									</Link>
+								)}
 								<Link to='/about'>
 									<MyChakraNavLink>About</MyChakraNavLink>
 								</Link>
@@ -107,7 +111,7 @@ const Navbar = () => {
 												p={2}
 												color={colorMode === "light" ? "black" : "gray.200"}
 												fontSize='xs'>
-												1
+												0
 											</Box>
 										</Box>
 									</MyChakraNavLink>
@@ -120,81 +124,89 @@ const Navbar = () => {
 						<Stack direction={"row"} gap={7}>
 							<ColorModeButton />
 
-							<Menu.Root positioning={{ placement: "bottom-end", gutter: 6 }}>
-								<Menu.Trigger
-									rounded='full'
-									focusRing='outside'
-									cursor={"pointer"}>
-									<Avatar.Root size='sm'>
-										<Avatar.Fallback name='Eman Soliman' />
-										<Avatar.Image src='https://api.dicebear.com/7.x/adventurer/svg?seed=Emoo' />
-									</Avatar.Root>
-								</Menu.Trigger>
-								<Portal>
-									<Menu.Positioner>
-										<Menu.Content>
-											<Center py={2}>
-												<Avatar.Root>
-													<Avatar.Fallback name='Eman Soliman' />
-													<Avatar.Image src='https://api.dicebear.com/7.x/adventurer/svg?seed=Emoo' />
-												</Avatar.Root>
-											</Center>
-											<Center mb={2}>
-												<Text>Eman Soliman</Text>
-											</Center>
-											<Menu.Separator />
-											<Menu.Item
-												value='profile'
-												color={colorMode === "light" ? "teal.700" : "teal.400"}>
-												<Link to='/profile'>
-													<Box display={"flex"} alignItems={"center"} gap={2}>
-														<CgProfile />
-														Profile
-													</Box>
-												</Link>
-											</Menu.Item>
-											<Menu.Item value='logout' color={"red.600"}>
-												<Link to='/logout'>
-													<Box display={"flex"} alignItems={"center"} gap={2}>
-														<TbLogout2 />
-														Logout
-													</Box>
-												</Link>
-											</Menu.Item>
-										</Menu.Content>
-									</Menu.Positioner>
-								</Portal>
-							</Menu.Root>
+							{isAuthenticated && (
+								<Menu.Root positioning={{ placement: "bottom-end", gutter: 6 }}>
+									<Menu.Trigger
+										rounded='full'
+										focusRing='outside'
+										cursor={"pointer"}>
+										<Avatar.Root size='sm'>
+											<Avatar.Fallback name='Eman Soliman' />
+											<Avatar.Image src='https://api.dicebear.com/7.x/adventurer/svg?seed=Emoo' />
+										</Avatar.Root>
+									</Menu.Trigger>
+									<Portal>
+										<Menu.Positioner>
+											<Menu.Content>
+												<Center py={2}>
+													<Avatar.Root>
+														<Avatar.Fallback name='Eman Soliman' />
+														<Avatar.Image src='https://api.dicebear.com/7.x/adventurer/svg?seed=Emoo' />
+													</Avatar.Root>
+												</Center>
+												<Center mb={2}>
+													<Text>Eman Soliman</Text>
+												</Center>
+												<Menu.Separator />
+												<Menu.Item
+													value='profile'
+													color={
+														colorMode === "light" ? "teal.700" : "teal.400"
+													}>
+													<Link to='/profile'>
+														<Box display={"flex"} alignItems={"center"} gap={2}>
+															<CgProfile />
+															Profile
+														</Box>
+													</Link>
+												</Menu.Item>
+												<Menu.Item value='logout' color={"red.600"}>
+													<Link to='/logout'>
+														<Box display={"flex"} alignItems={"center"} gap={2}>
+															<TbLogout2 />
+															Logout
+														</Box>
+													</Link>
+												</Menu.Item>
+											</Menu.Content>
+										</Menu.Positioner>
+									</Portal>
+								</Menu.Root>
+							)}
 
-							<HStack spaceX={1} ml={4}>
-								<Link to='/login'>
-									<Button
-										variant='outline'
-										size='xs'
-										md={{ width: "100px", height: "40px", fontSize: "16px" }}>
-										Sign in
-									</Button>
-								</Link>
-								<Link to='/signup'>
-									<Button
-										md={{ width: "100px", height: "40px", fontSize: "16px" }}
-										variant='solid'
-										bg={"teal.700"}
-										color={"white"}
-										size='xs'>
-										Sign up
-									</Button>
-								</Link>
-							</HStack>
+							{!isAuthenticated && (
+								<HStack spaceX={1} ml={4}>
+									<Link to='/login'>
+										<Button
+											variant='outline'
+											size='xs'
+											md={{ width: "100px", height: "40px", fontSize: "16px" }}>
+											Sign in
+										</Button>
+									</Link>
+									<Link to='/signup'>
+										<Button
+											md={{ width: "100px", height: "40px", fontSize: "16px" }}
+											variant='solid'
+											bg={"teal.700"}
+											color={"white"}
+											size='xs'>
+											Sign up
+										</Button>
+									</Link>
+								</HStack>
+							)}
 						</Stack>
 					</Flex>
 				</Flex>
 				{open ? (
 					<Box pb={4} display={{ md: "none" }}>
 						<Stack as={"nav"} gap={4}>
-							<Link to='/admin/dashboard'>
-								<MyChakraNavLink>Admin Dashboard</MyChakraNavLink>
-							</Link>
+							{isAuthenticated && isAdmin && (
+								<Link to='/admin/dashboard'>
+									<MyChakraNavLink>Admin Dashboard</MyChakraNavLink>
+								</Link>
+							)}
 							<Link to='/about'>
 								<MyChakraNavLink>About</MyChakraNavLink>
 							</Link>
@@ -212,7 +224,7 @@ const Navbar = () => {
 											p={2}
 											color={colorMode === "light" ? "black" : "gray.200"}
 											fontSize={"xs"}>
-											1
+											0
 										</Text>
 									</Box>
 								</MyChakraNavLink>

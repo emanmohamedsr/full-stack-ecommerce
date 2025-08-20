@@ -19,13 +19,15 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { useLoginUserMutation } from "@/services/UserApi";
+import { useLazyGetMeQuery, useLoginUserMutation } from "@/services/UserApi";
 import { toaster } from "@/config/toaster";
 import type { IError } from "@/interfaces/Error";
 import CookieService from "@/services/Cookie";
 import { useState } from "react";
 import type { CookieSetOptions } from "universal-cookie";
-import type { IResponse } from "@/interfaces/User";
+import type { IResponse, IUser } from "@/interfaces/User";
+import { useDispatch } from "react-redux";
+import { setUserSession } from "@/app/features/authSlice";
 
 interface ILoginUser {
 	identifier: string;
@@ -33,9 +35,10 @@ interface ILoginUser {
 }
 
 const LoginPage = () => {
+	const dispatch = useDispatch();
 	const [loginUser, { isLoading }] = useLoginUserMutation();
+	const [triggerGetMe] = useLazyGetMeQuery();
 	const [rememberMe, setRememberMe] = useState<boolean>(false);
-	console.log(rememberMe);
 	const navigate = useNavigate();
 	const {
 		register,
@@ -48,6 +51,7 @@ const LoginPage = () => {
 	const handleLoginUser = async (data: ILoginUser) => {
 		try {
 			const res: IResponse = await loginUser(data).unwrap();
+
 			const options: CookieSetOptions = {
 				path: "/",
 			};
@@ -58,7 +62,18 @@ const LoginPage = () => {
 				date.setTime(date.getTime() + EXPIRES_IN_DAYS);
 				options.expires = date;
 			}
-			CookieService.set("jwt", res.jwt, options);
+			CookieService.set("ma7al_jwt", res.jwt, options);
+
+			const cookieToken = CookieService.get("ma7al_jwt");
+			const user: IUser = await triggerGetMe(cookieToken).unwrap();
+
+			dispatch(
+				setUserSession({
+					token: res.jwt,
+					user: user,
+				}),
+			);
+
 			toaster.success({
 				title: "Login successful",
 				description: `Welcome back, ${res.user.username}!`,

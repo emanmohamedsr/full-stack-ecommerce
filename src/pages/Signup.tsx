@@ -18,12 +18,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SignupSchema } from "@/validation/FormSchema";
 import { useNavigate } from "react-router-dom";
 import { toaster } from "@/config/toaster";
-import { useSignupUserMutation } from "@/services/UserApi";
+import { useLazyGetMeQuery, useSignupUserMutation } from "@/services/UserApi";
 import type { IError } from "@/interfaces/Error";
-import type { IResponse } from "@/interfaces/User";
+import type { IResponse, IUser } from "@/interfaces/User";
 import CookieService from "@/services/Cookie";
 import { useState } from "react";
 import type { CookieSetOptions } from "universal-cookie";
+import { useDispatch } from "react-redux";
+import { setUserSession } from "@/app/features/authSlice";
 
 interface ISignupUser {
 	username: string;
@@ -32,8 +34,10 @@ interface ISignupUser {
 }
 
 const SignupPage = () => {
+	const dispatch = useDispatch();
 	const [rememberMe, setRememberMe] = useState<boolean>(false);
 	const [signupUser, { isLoading }] = useSignupUserMutation();
+	const [triggerGetMe] = useLazyGetMeQuery();
 	const navigate = useNavigate();
 	const {
 		register,
@@ -46,6 +50,7 @@ const SignupPage = () => {
 	const handleSignupUser = async (data: ISignupUser) => {
 		try {
 			const res: IResponse = await signupUser(data).unwrap();
+
 			const options: CookieSetOptions = {
 				path: "/",
 			};
@@ -56,7 +61,18 @@ const SignupPage = () => {
 				date.setTime(date.getTime() + EXPIRES_IN_DAYS);
 				options.expires = date;
 			}
-			CookieService.set("jwt", res.jwt, options);
+			CookieService.set("ma7al_jwt", res.jwt, options);
+
+			const cookieToken = CookieService.get("ma7al_jwt");
+			const user: IUser = await triggerGetMe(cookieToken).unwrap();
+
+			dispatch(
+				setUserSession({
+					token: res.jwt,
+					user: user,
+				}),
+			);
+
 			toaster.success({
 				title: "Signup successful",
 				description: `Welcome aboard, ${res.user.username}!`,

@@ -1,3 +1,4 @@
+import RouterAuth from "@/components/auth/RouterAuth";
 import ErrorHandler from "@/components/error/ErrorHandler";
 import HomePage from "@/pages";
 import AboutPage from "@/pages/About";
@@ -21,22 +22,68 @@ import {
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<>
-			<Route path='/' element={<RootLayout />} errorElement={<ErrorHandler />}>
-				<Route index element={<HomePage />} />
-				<Route path='about' element={<AboutPage />} />
-				<Route path='profile' element={<ProfilePage />} />
-				<Route path='cart' element={<CartPage />} />
-				<Route path='logout' element={<LogoutPage />} />
-				<Route path='login' element={<LoginPage />} />
-				<Route path='admin-login' element={<AdminLoginPage />} />
-				<Route path='signup' element={<SignupPage />} />
-				<Route path='products/:id' element={<ProductPage />} />
-			</Route>
-			<Route
-				path='/admin'
-				element={<RootAdminLayout />}
-				errorElement={<ErrorHandler />}>
-				<Route path='dashboard' element={<AdminDashboardPage />} />
+			<Route path='/' errorElement={<ErrorHandler />}>
+				<Route element={<RootLayout />}>
+					<Route index element={<HomePage />} />
+					<Route path='about' element={<AboutPage />} />
+					<Route path='products/:id' element={<ProductPage />} />
+					<Route
+						path='login'
+						element={
+							<RouterAuth shouldHaveToken={false} redirectPath='/'>
+								<LoginPage />
+							</RouterAuth>
+						}
+					/>
+					<Route
+						path='signup'
+						element={
+							<RouterAuth shouldHaveToken={false} redirectPath='/'>
+								<SignupPage />
+							</RouterAuth>
+						}
+					/>
+					<Route
+						path='logout'
+						element={
+							<RouterAuth shouldHaveToken={true} redirectPath='/login'>
+								<LogoutPage />
+							</RouterAuth>
+						}
+					/>
+					<Route
+						path='cart'
+						element={
+							<RouterAuth shouldHaveToken={true} redirectPath='/login'>
+								<CartPage />
+							</RouterAuth>
+						}
+					/>
+					<Route
+						path='profile'
+						element={
+							<RouterAuth shouldHaveToken={true} redirectPath='/login'>
+								<ProfilePage />
+							</RouterAuth>
+						}
+					/>
+					<Route
+						path='admin-login'
+						element={
+							<RouterAuth
+								shouldHaveToken={false}
+								redirectPath='/admin-dashboard'>
+								<AdminLoginPage />
+							</RouterAuth>
+						}
+					/>
+					<Route path='*' element={<PageNotFound />} />
+				</Route>
+
+				<Route path='admin' element={<RootAdminLayout />}>
+					<Route path='dashboard' element={<AdminDashboardPage />} />
+					<Route path='*' element={<PageNotFound />} />
+				</Route>
 			</Route>
 			<Route path='*' element={<PageNotFound />} />
 		</>,

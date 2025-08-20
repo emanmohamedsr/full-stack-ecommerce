@@ -1,24 +1,17 @@
 import Cookies, { type CookieSetOptions } from "universal-cookie";
 
 type Key = string;
-type JsonVal =
-	| string
-	| number
-	| boolean
-	| JsonVal[]
-	| { [key: string]: JsonVal };
 
 const cookies = new Cookies();
 
 class CookieService {
 	has(key: Key): boolean {
-		return this.get(key) !== undefined;
+		return this.get(key) !== null;
 	}
-	get(key: Key): JsonVal | undefined {
-		const value = cookies.get(key);
-		return value !== undefined ? value : undefined;
+	get(key: Key): Key | null {
+		return cookies.get(key);
 	}
-	set(key: Key, value: JsonVal, options?: CookieSetOptions) {
+	set(key: Key, value: Key, options?: CookieSetOptions) {
 		return cookies.set(key, value, options);
 	}
 	remove(key: Key) {
