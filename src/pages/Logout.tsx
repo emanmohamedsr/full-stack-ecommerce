@@ -1,7 +1,8 @@
 import { useColorMode } from "@/hooks/useColorMode";
 import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-
+import cookieService from "@/services/Cookie";
+import { toaster } from "@/config/toaster";
 const LogoutPage = () => {
 	const navigate = useNavigate();
 	const { colorMode } = useColorMode();
@@ -32,7 +33,20 @@ const LogoutPage = () => {
 						suggestions, please let us know.
 					</Text>
 					<Stack gap={4} mt={6}>
-						<Button variant='solid' bg='red.700' color='white'>
+						<Button
+							onClick={() => {
+								cookieService.remove("ma7al_jwt");
+								toaster.info({
+									title: "Logged out",
+									description: "You have been successfully logged out.",
+								});
+								setTimeout(() => {
+									window.location.reload();
+								}, 1000);
+							}}
+							variant='solid'
+							bg='red.700'
+							color='white'>
 							Logout
 						</Button>
 						<Button

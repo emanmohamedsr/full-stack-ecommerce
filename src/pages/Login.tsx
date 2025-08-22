@@ -10,8 +10,6 @@ import {
 	Stack,
 	Button,
 	Heading,
-	Box,
-	SkeletonCircle,
 	HStack,
 	Checkbox,
 	Spinner,
@@ -162,20 +160,6 @@ const LoginPage = () => {
 								Forgot Password?
 							</Button>
 						</HStack>
-
-						<Box
-							onClick={() => navigate("/admin-login")}
-							pos={"absolute"}
-							bottom={"5px"}
-							left={"4px"}
-							opacity={0}
-							w={"20px"}
-							h={"20px"}
-							bg={"yellow.700"}
-							borderRadius={"full"}
-							_hover={{ opacity: 0.8 }}>
-							<SkeletonCircle size='100%' />
-						</Box>
 
 						<Button
 							disabled={isLoading}

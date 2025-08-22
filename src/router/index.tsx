@@ -4,7 +4,6 @@ import HomePage from "@/pages";
 import AboutPage from "@/pages/About";
 import AdminDashboardPage from "@/pages/AdminDashboard";
 import RootAdminLayout from "@/pages/AdminLayout";
-import AdminLoginPage from "@/pages/AdminLogin";
 import CartPage from "@/pages/Cart";
 import RootLayout from "@/pages/Layout";
 import LoginPage from "@/pages/Login";
@@ -60,21 +59,18 @@ const router = createBrowserRouter(
 							</RouterAuth>
 						}
 					/>
-					<Route
-						path='admin-login'
-						element={
-							<RouterAuth
-								shouldHaveToken={false}
-								redirectPath='/admin-dashboard'>
-								<AdminLoginPage />
-							</RouterAuth>
-						}
-					/>
 					<Route path='*' element={<PageNotFound />} />
 				</Route>
 
 				<Route path='admin' element={<RootAdminLayout />}>
-					<Route path='dashboard' element={<AdminDashboardPage />} />
+					<Route
+						path='dashboard'
+						element={
+							<RouterAuth shouldHaveToken={true} redirectPath='/login'>
+								<AdminDashboardPage />
+							</RouterAuth>
+						}
+					/>
 					<Route path='*' element={<PageNotFound />} />
 				</Route>
 			</Route>

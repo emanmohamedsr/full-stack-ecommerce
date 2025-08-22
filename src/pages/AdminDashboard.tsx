@@ -1,94 +1,140 @@
-import ProductCell from "@/components/ProductCell";
-import { Button, Flex, Table } from "@chakra-ui/react";
-
-const items = [
-	{
-		id: 1,
-		title: "Essence Mascara Lash Princess",
-		description:
-			"The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.",
-		price: 9.99,
-		category: {
-			title: "beauty",
-		},
-		thumbnail: {
-			url: "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp",
-		},
-		stock: 99,
-	},
-	{
-		id: 2,
-		title: "Eyeshadow Palette with Mirror",
-		description:
-			"The Eyeshadow Palette with Mirror offers a versatile range of eyeshadow shades for creating stunning eye looks. With a built-in mirror, it's convenient for on-the-go makeup application.",
-		price: 19.99,
-		category: {
-			title: "beauty",
-		},
-		thumbnail: {
-			url: "https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/thumbnail.webp",
-		},
-		stock: 34,
-	},
-	{
-		id: 3,
-		title: "Powder Canister",
-		description:
-			"The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
-		price: 14.99,
-		category: {
-			title: "beauty",
-		},
-		thumbnail: {
-			url: "https://cdn.dummyjson.com/product-images/beauty/powder-canister/thumbnail.webp",
-		},
-		stock: 89,
-	},
-];
+import { clearSession, setUserSession } from "@/app/features/authSlice";
+import type { RootState } from "@/app/store";
+import type { IUser } from "@/interfaces/User";
+import { useLazyGetMeQuery } from "@/services/UserApi";
+import { Box, HStack, Spinner, Table, Text, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import cookieService from "@/services/Cookie";
+import ErrorHandler from "@/components/error/ErrorHandler";
 
 const AdminDashboardPage = () => {
-	return (
-		<Table.ScrollArea borderWidth='1px' borderTop={"none"} maxW='100%'>
-			<Table.Root size='sm' variant='line' striped>
-				<Table.Header>
-					<Table.Row>
-						<Table.ColumnHeader textAlign={"center"} minW='300px'>
-							Product
-						</Table.ColumnHeader>
-						<Table.ColumnHeader textAlign={"center"} minW='200px'>
-							Actions
-						</Table.ColumnHeader>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{items.map((item) => (
-						<Table.Row key={item.id}>
-							<Table.Cell>
-								<ProductCell
-									thumbnail={item.thumbnail.url}
-									title={item.title}
-									price={item.price}
-									category={item.category.title}
-								/>
-							</Table.Cell>
-							<Table.Cell>
-								<Flex align='center' justify='center' gap={2} wrap={"wrap"}>
-									<Button bg={"cyan.700"} color={"white"}>
-										view
-									</Button>
-									<Button bg={"teal.700"} color={"white"}>
-										Edit
-									</Button>
-									<Button bg={"red.700"} color={"white"}>
-										Delete
-									</Button>
-								</Flex>
-							</Table.Cell>
+	const { token, user } = useSelector((state: RootState) => state.auth);
+	const dispatch = useDispatch();
+	const [triggerGetMe, { isLoading, isError, error }] = useLazyGetMeQuery();
+	const [validAdmin, setValidAdmin] = useState<boolean>(false);
+	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+	useEffect(() => {
+		let isMounted = true; // Flag to prevent state updates on unmounted component
+
+		const checkAuth = async () => {
+			// If we already have a token and user in store
+			if (token && user) {
+				if (isMounted) {
+					setValidAdmin(user.role?.name === "Admin");
+					setIsCheckingAuth(false);
+				}
+				return;
+			}
+
+			// Check if we have a token in cookies
+			const cookieToken = cookieService.get("ma7al_jwt");
+			if (cookieToken) {
+				try {
+					const res: IUser = await triggerGetMe(cookieToken).unwrap();
+					if (isMounted) {
+						dispatch(
+							setUserSession({
+								token: cookieToken,
+								user: res,
+							}),
+						);
+						setValidAdmin(res.role?.name === "Admin");
+					}
+				} catch (error) {
+					console.error("Auth check failed:", error);
+					cookieService.remove("ma7al_jwt");
+					dispatch(clearSession());
+					if (isMounted) {
+						setValidAdmin(false);
+					}
+				}
+			} else if (isMounted) {
+				setValidAdmin(false);
+			}
+
+			if (isMounted) setIsCheckingAuth(false);
+		};
+
+		checkAuth();
+		// Cleanup function
+		return () => {
+			isMounted = false;
+		};
+	}, [dispatch, token, user, triggerGetMe]);
+
+	if (isCheckingAuth || isLoading) {
+		return (
+			<HStack overflow={"hidden"}>
+				<VStack
+					bg='gray.600'
+					colorPalette='teal'
+					gap={4}
+					align='center'
+					justify='center'>
+					<Spinner color='teal.600' size='xl' />
+					<Text color='teal.600'>Checking authentication...</Text>
+				</VStack>
+			</HStack>
+		);
+	}
+	if (isError) {
+		throw error;
+	}
+	if (validAdmin) {
+		return (
+			<Table.ScrollArea borderWidth='1px' borderTop={"none"} maxW='100%'>
+				<Table.Root size='sm' variant='line' striped>
+					<Table.Header>
+						<Table.Row>
+							<Table.ColumnHeader textAlign={"center"} minW='300px'>
+								Product
+							</Table.ColumnHeader>
+							<Table.ColumnHeader textAlign={"center"} minW='200px'>
+								Actions
+							</Table.ColumnHeader>
 						</Table.Row>
-					))}
-				</Table.Body>
-			</Table.Root>
-		</Table.ScrollArea>
+					</Table.Header>
+					<Table.Body>
+						{/* {products.map((p) => (
+							<Table.Row key={p.id}>
+								<Table.Cell>
+									<ProductCell
+									product={p}
+								/> 
+								</Table.Cell>
+								<Table.Cell>
+									<Flex align='center' justify='center' gap={2} wrap={"wrap"}>
+										<Button bg={"cyan.700"} color={"white"}>
+											view
+										</Button>
+										<Button bg={"teal.700"} color={"white"}>
+											Edit
+										</Button>
+										<Button bg={"red.700"} color={"white"}>
+											Delete
+										</Button>
+									</Flex>
+								</Table.Cell>
+							</Table.Row>
+						))} */}
+					</Table.Body>
+				</Table.Root>
+			</Table.ScrollArea>
+		);
+	}
+	return (
+		<Box
+			position='absolute'
+			top={-64}
+			left={{ base: 0, md: -60 }}
+			right={0}
+			bottom={0}>
+			<ErrorHandler
+				defaultTitle='access denied'
+				defaultStatusCode={403}
+				showHome></ErrorHandler>
+		</Box>
 	);
 };
 
