@@ -10,6 +10,13 @@ const initialState: IInitialState = {
 	products: [],
 };
 
+if (typeof window !== "undefined") {
+	const cartProducts = localStorage.getItem("cart");
+	if (cartProducts) {
+		initialState.products = JSON.parse(cartProducts);
+	}
+}
+
 const cartSlice = createSlice({
 	name: "cart",
 	initialState,

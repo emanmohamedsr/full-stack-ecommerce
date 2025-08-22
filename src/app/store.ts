@@ -15,6 +15,11 @@ export const store = configureStore({
 		getDefaultMiddleware().concat(productsApi.middleware, UserApi.middleware),
 });
 
+store.subscribe(() => {
+	const cartState = store.getState().cart.products;
+	localStorage.setItem("cart", JSON.stringify(cartState));
+});
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 setupListeners(store.dispatch);
