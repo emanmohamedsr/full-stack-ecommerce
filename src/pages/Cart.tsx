@@ -1,64 +1,31 @@
+import {
+	handleCartProducts,
+	selectCartProducts,
+} from "@/app/features/cartSlice";
 import EmptyProductsState from "@/components/EmptyProductsState";
 import ProductCell from "@/components/ProductCell";
+import {
+	calcTotalPrice,
+	handleDecreaseProductCartQuantity,
+	handleIncreaseProductCartQuantity,
+} from "@/utils";
 import {
 	HStack,
 	IconButton,
 	Table,
-	Highlight,
 	Button,
-	Box,
 	Stack,
+	Text,
 } from "@chakra-ui/react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { IoBagCheckOutline } from "react-icons/io5";
-const cartProducts = [
-	{
-		id: 1,
-		title: "Essence Mascara Lash Princess",
-		description:
-			"The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.",
-		price: 9.99,
-		category: {
-			title: "beauty",
-		},
-		thumbnail: {
-			url: "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp",
-		},
-		stock: 99,
-	},
-	{
-		id: 2,
-		title: "Eyeshadow Palette with Mirror",
-		description:
-			"The Eyeshadow Palette with Mirror offers a versatile range of eyeshadow shades for creating stunning eye looks. With a built-in mirror, it's convenient for on-the-go makeup application.",
-		price: 19.99,
-		category: {
-			title: "beauty",
-		},
-		thumbnail: {
-			url: "https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/thumbnail.webp",
-		},
-		stock: 34,
-	},
-	{
-		id: 3,
-		title: "Powder Canister",
-		description:
-			"The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
-		price: 14.99,
-		category: {
-			title: "beauty",
-		},
-		thumbnail: {
-			url: "https://cdn.dummyjson.com/product-images/beauty/powder-canister/thumbnail.webp",
-		},
-		stock: 89,
-	},
-];
+import { useDispatch, useSelector } from "react-redux";
 
 const CartPage = () => {
-	if (cartProducts.length <= 0) {
+	const cartProducts = useSelector(selectCartProducts);
+	const dispatch = useDispatch();
+	if (cartProducts.length === 0) {
 		return (
 			<Stack justifyContent={"center"} alignItems={"center"}>
 				<EmptyProductsState
@@ -74,13 +41,12 @@ const CartPage = () => {
 			<Table.Root size='sm' variant='outline'>
 				<Table.Caption fontSize={"lg"}>
 					<HStack justify={"space-between"} alignItems={"center"} py={3} px={6}>
-						<Box>
-							<Highlight
-								query='Total Price'
-								styles={{ px: "0.5", bg: "teal.subtle", color: "teal.fg" }}>
-								Total Price: 100$
-							</Highlight>
-						</Box>
+						<HStack alignItems={"center"}>
+							Total Price:
+							<Text borderRadius={"md"} bg={"teal.700"} color={"white"} p={1}>
+								${calcTotalPrice(cartProducts)}
+							</Text>
+						</HStack>
 						<Button bg={"teal.700"} color={"white"}>
 							<IoBagCheckOutline />
 							Checkout
@@ -101,22 +67,24 @@ const CartPage = () => {
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{cartProducts.map((pro) => (
-						<Table.Row key={pro.id}>
+					{cartProducts.map((p) => (
+						<Table.Row key={p.id}>
 							<Table.Cell p={4}>
-								<ProductCell
-									thumbnail={pro.thumbnail.url}
-									title={pro.title}
-									price={pro.price}
-									category={pro.category.title}
-								/>
+								<ProductCell product={p} />
 							</Table.Cell>
 							<Table.Cell textAlign={"center"} fontSize={"xl"} fontWeight={500}>
-								1
+								{p.quantity || 1}
 							</Table.Cell>
 							<Table.Cell>
 								<HStack gap={2} justifyContent={"center"}>
 									<IconButton
+										onClick={() =>
+											dispatch(
+												handleCartProducts(
+													handleDecreaseProductCartQuantity(cartProducts, p),
+												),
+											)
+										}
 										size='xs'
 										aria-label='decrease quantity'
 										color={"red.700"}
@@ -126,6 +94,13 @@ const CartPage = () => {
 										<FaMinus />
 									</IconButton>
 									<IconButton
+										onClick={() =>
+											dispatch(
+												handleCartProducts(
+													handleIncreaseProductCartQuantity(cartProducts, p),
+												),
+											)
+										}
 										size='xs'
 										aria-label='increase quantity'
 										color='teal.600'

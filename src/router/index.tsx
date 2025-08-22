@@ -26,6 +26,7 @@ const router = createBrowserRouter(
 				<Route element={<RootLayout />}>
 					<Route index element={<HomePage />} />
 					<Route path='about' element={<AboutPage />} />
+					<Route path='cart' element={<CartPage />} />
 					<Route path='products/:id' element={<ProductPage />} />
 					<Route
 						path='login'
@@ -48,14 +49,6 @@ const router = createBrowserRouter(
 						element={
 							<RouterAuth shouldHaveToken={true} redirectPath='/login'>
 								<LogoutPage />
-							</RouterAuth>
-						}
-					/>
-					<Route
-						path='cart'
-						element={
-							<RouterAuth shouldHaveToken={true} redirectPath='/login'>
-								<CartPage />
 							</RouterAuth>
 						}
 					/>

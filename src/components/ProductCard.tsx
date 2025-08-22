@@ -2,14 +2,21 @@ import { Box, Button, Card, Image } from "@chakra-ui/react";
 import Product from "../assets/product.svg";
 import { useNavigate } from "react-router-dom";
 import type { IProduct } from "@/interfaces/Product";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	handleCartProducts,
+	selectCartProducts,
+} from "@/app/features/cartSlice";
+import { addProductToCart } from "@/utils";
 
 interface IProps {
 	product: IProduct;
 }
 
-const ProductCard = ({
-	product: { documentId, title, description, thumbnail, stock, price },
-}: IProps) => {
+const ProductCard = ({ product }: IProps) => {
+	const { documentId, title, description, thumbnail, stock, price } = product;
+	const dispatch = useDispatch();
+	const productsCartState = useSelector(selectCartProducts);
 	const navigate = useNavigate();
 	const thumbnailUrl = thumbnail?.url
 		? `${import.meta.env.VITE_API_URL}${thumbnail.url}`
@@ -41,7 +48,14 @@ const ProductCard = ({
 					onClick={() => navigate(`/products/${documentId}`)}>
 					View
 				</Button>
-				<Button colorPalette={"teal"} _hover={{ bg: "teal.focusRing" }}>
+				<Button
+					onClick={() =>
+						dispatch(
+							handleCartProducts(addProductToCart(product, productsCartState)),
+						)
+					}
+					colorPalette={"teal"}
+					_hover={{ bg: "teal.focusRing" }}>
 					Add To Cart
 				</Button>
 			</Card.Footer>

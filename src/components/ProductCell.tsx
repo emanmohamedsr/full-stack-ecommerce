@@ -1,14 +1,22 @@
 import { useColorMode } from "@/hooks/useColorMode";
-import { Box, Center, Heading, Image, Stack, Text } from "@chakra-ui/react";
+import type { ICategory, IProduct } from "@/interfaces/Product";
+import {
+	Badge,
+	Box,
+	Center,
+	Heading,
+	Image,
+	Stack,
+	Text,
+} from "@chakra-ui/react";
 
 interface Iprops {
-	thumbnail: string;
-	title: string;
-	price: number;
-	category: string;
+	product: IProduct;
 }
 
-const ProductCell = ({ thumbnail, title, price, category }: Iprops) => {
+const ProductCell = ({
+	product: { categories, title, price, thumbnail },
+}: Iprops) => {
 	const { colorMode } = useColorMode();
 	return (
 		<Center py={12}>
@@ -35,7 +43,9 @@ const ProductCell = ({ thumbnail, title, price, category }: Iprops) => {
 						pos: "absolute",
 						top: 5,
 						left: 0,
-						backgroundImage: `url(${thumbnail})`,
+						backgroundImage: `url(${import.meta.env.VITE_API_URL}${
+							thumbnail.url
+						})`,
 						filter: "blur(15px)",
 						zIndex: -1,
 					}}
@@ -49,13 +59,21 @@ const ProductCell = ({ thumbnail, title, price, category }: Iprops) => {
 						height={"180px"}
 						width={282}
 						objectFit={"cover"}
-						src={thumbnail}
+						src={`${import.meta.env.VITE_API_URL}${thumbnail.url}`}
 						alt='#'
 					/>
 				</Box>
 				<Stack pt={10} align={"center"} maxW={"250px"}>
 					<Text color={"gray.500"} fontSize={"sm"} textTransform={"uppercase"}>
-						{category}
+						{categories.length > 0 ? (
+							categories.map((category: ICategory) => (
+								<Badge key={category.id} colorScheme='teal'>
+									{category.title}
+								</Badge>
+							))
+						) : (
+							<Badge colorScheme='teal'>Uncategorized</Badge>
+						)}
 					</Text>
 					<Heading
 						fontSize={"2xl"}

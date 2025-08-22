@@ -34,6 +34,7 @@ import { useLazyGetMeQuery } from "@/services/UserApi";
 import type { IUser } from "@/interfaces/User";
 import { clearSession, setUserSession } from "@/app/features/authSlice";
 import { useEffect, useState } from "react";
+import { selectCartProducts } from "@/app/features/cartSlice";
 interface Props {
 	children: React.ReactNode;
 }
@@ -56,6 +57,7 @@ const MyChakraNavLink = (props: Props) => {
 };
 
 const Navbar = () => {
+	const cartProducts = useSelector(selectCartProducts);
 	const { token, user } = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
 	const [triggerGetMe, { isLoading, isError, error }] = useLazyGetMeQuery();
@@ -189,22 +191,24 @@ const Navbar = () => {
 									<MyChakraNavLink>
 										<Box position={"relative"}>
 											<AiOutlineShoppingCart />
-											<Box
-												as='span'
-												position={"absolute"}
-												boxSize={"18px"}
-												display={"flex"}
-												alignItems={"center"}
-												justifyContent={"center"}
-												top={"-15px"}
-												right={"-15px"}
-												rounded={"full"}
-												bg={colorMode === "light" ? "red.200" : "red.700"}
-												p={2}
-												color={colorMode === "light" ? "black" : "gray.200"}
-												fontSize='xs'>
-												0
-											</Box>
+											{cartProducts.length > 0 && (
+												<Box
+													as='span'
+													position={"absolute"}
+													boxSize={"18px"}
+													display={"flex"}
+													alignItems={"center"}
+													justifyContent={"center"}
+													top={"-15px"}
+													right={"-15px"}
+													rounded={"full"}
+													bg={colorMode === "light" ? "red.200" : "red.700"}
+													p={2}
+													color={colorMode === "light" ? "black" : "gray.200"}
+													fontSize='xs'>
+													{cartProducts.length}
+												</Box>
+											)}
 										</Box>
 									</MyChakraNavLink>
 								</Link>
@@ -310,18 +314,20 @@ const Navbar = () => {
 								<MyChakraNavLink>
 									<Box display={"flex"} alignItems={"center"} gap={2}>
 										<AiOutlineShoppingCart />
-										<Text
-											rounded={"full"}
-											boxSize={"18px"}
-											display={"flex"}
-											alignItems={"center"}
-											justifyContent={"center"}
-											bg={colorMode === "light" ? "red.200" : "red.700"}
-											p={2}
-											color={colorMode === "light" ? "black" : "gray.200"}
-											fontSize={"xs"}>
-											0
-										</Text>
+										{cartProducts.length > 0 && (
+											<Text
+												rounded={"full"}
+												boxSize={"18px"}
+												display={"flex"}
+												alignItems={"center"}
+												justifyContent={"center"}
+												bg={colorMode === "light" ? "red.200" : "red.700"}
+												p={2}
+												color={colorMode === "light" ? "black" : "gray.200"}
+												fontSize={"xs"}>
+												{cartProducts.length}
+											</Text>
+										)}
 									</Box>
 								</MyChakraNavLink>
 							</Link>
