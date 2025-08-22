@@ -16,7 +16,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import ProductPageSkeleton from "@/components/ProductPageSkeleton";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import type { ICategory } from "@/interfaces/Product";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	handleCartProducts,
+	selectCartProducts,
+} from "@/app/features/cartSlice";
+import { addProductToCart } from "@/utils";
 const ProductPage = () => {
+	const productsCartState = useSelector(selectCartProducts);
+	const dispatch = useDispatch();
 	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();
 	const {
@@ -90,7 +98,16 @@ const ProductPage = () => {
 						</Tabs.Root>
 					</Card.Body>
 					<Card.Footer>
-						<Button>Buy {title}</Button>
+						<Button
+							onClick={() =>
+								dispatch(
+									handleCartProducts(
+										addProductToCart(product, productsCartState),
+									),
+								)
+							}>
+							Buy {title}
+						</Button>
 					</Card.Footer>
 				</Box>
 			</Card.Root>
