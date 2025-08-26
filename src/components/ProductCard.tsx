@@ -1,4 +1,4 @@
-import { Box, Button, Card, Image } from "@chakra-ui/react";
+import { Badge, Button, Card, HStack, Image, Text } from "@chakra-ui/react";
 import Product from "../assets/product.svg";
 import { useNavigate } from "react-router-dom";
 import type { IProduct } from "@/interfaces/Product";
@@ -14,7 +14,8 @@ interface IProps {
 }
 
 const ProductCard = ({ product }: IProps) => {
-	const { documentId, title, description, thumbnail, stock, price } = product;
+	const { documentId, title, description, thumbnail, stock, price, category } =
+		product;
 	const dispatch = useDispatch();
 	const productsCartState = useSelector(selectCartProducts);
 	const navigate = useNavigate();
@@ -34,12 +35,13 @@ const ProductCard = ({ product }: IProps) => {
 				/>
 				<Card.Title mt='2'>{title}</Card.Title>
 				<Card.Description>{description}</Card.Description>
-				<Box mt='2' fontSize={"sms"}>
-					${price}
-				</Box>
-				<Box fontSize={"xs"} color='gray.500'>
-					{stock > 0 ? `${stock} in stock` : "Out of stock"}
-				</Box>
+				<Badge colorPalette={"teal"} mt='2' fontSize={"sm"} width='fit-content'>
+					{category.title}
+				</Badge>
+				<HStack justifyContent='space-between'>
+					<Text fontWeight={"bold"}>${price}</Text>
+					<Text>{stock > 0 ? `${stock} in stock` : "Out of stock"}</Text>
+				</HStack>
 			</Card.Body>
 			<Card.Footer justifyContent='flex-end'>
 				<Button

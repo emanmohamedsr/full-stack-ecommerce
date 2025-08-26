@@ -13,6 +13,6 @@ export interface IProduct {
 	};
 	stock: number;
 	price: number;
-	categories: ICategory[];
+	category: ICategory;
 	quantity: number;
 }

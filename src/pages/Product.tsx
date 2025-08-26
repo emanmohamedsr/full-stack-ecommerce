@@ -15,7 +15,6 @@ import { useGetOneProductQuery } from "@/services/productsApi";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductPageSkeleton from "@/components/ProductPageSkeleton";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
-import type { ICategory } from "@/interfaces/Product";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	handleCartProducts,
@@ -33,7 +32,7 @@ const ProductPage = () => {
 		error,
 		data: product,
 	} = useGetOneProductQuery(id!);
-	const { title, description, thumbnail, categories, price, stock } =
+	const { title, description, thumbnail, category, price, stock } =
 		product || {};
 	const thumbnailUrl = thumbnail?.url
 		? `${import.meta.env.VITE_API_URL}${thumbnail.url}`
@@ -89,11 +88,7 @@ const ProductPage = () => {
 								<Badge>{price}$</Badge>
 							</Tabs.Content>
 							<Tabs.Content value='category'>
-								<Box spaceX='2'>
-									{categories.map((cat: ICategory) => (
-										<Badge key={cat.id}>{cat.title}</Badge>
-									))}
-								</Box>
+								<Badge>{category.title}</Badge>
 							</Tabs.Content>
 						</Tabs.Root>
 					</Card.Body>

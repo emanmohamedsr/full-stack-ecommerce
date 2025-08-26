@@ -42,7 +42,7 @@ const LogoutPage = () => {
 								});
 								setTimeout(() => {
 									window.location.reload();
-								}, 1000);
+								}, 100);
 							}}
 							variant='solid'
 							bg='red.700'

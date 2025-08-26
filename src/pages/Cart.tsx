@@ -4,6 +4,7 @@ import {
 } from "@/app/features/cartSlice";
 import EmptyProductsState from "@/components/EmptyProductsState";
 import ProductCell from "@/components/ProductCell";
+import type { IProduct } from "@/interfaces/Product";
 import {
 	calcTotalPrice,
 	handleDecreaseProductCartQuantity,
@@ -44,7 +45,7 @@ const CartPage = () => {
 						<HStack alignItems={"center"}>
 							Total Price:
 							<Text borderRadius={"md"} bg={"teal.700"} color={"white"} p={1}>
-								${calcTotalPrice(cartProducts)}
+								${calcTotalPrice(cartProducts).toFixed(2)}
 							</Text>
 						</HStack>
 						<Button bg={"teal.700"} color={"white"}>
@@ -67,10 +68,15 @@ const CartPage = () => {
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{cartProducts.map((p) => (
+					{cartProducts.map((p: IProduct) => (
 						<Table.Row key={p.id}>
 							<Table.Cell p={4}>
-								<ProductCell product={p} />
+								<ProductCell
+									category={p.category}
+									title={p.title}
+									price={p.price}
+									thumbnail={p.thumbnail.url}
+								/>
 							</Table.Cell>
 							<Table.Cell textAlign={"center"} fontSize={"xl"} fontWeight={500}>
 								{p.quantity || 1}

@@ -38,3 +38,7 @@ export const handleIncreaseProductCartQuantity = (
 		p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p,
 	);
 };
+
+export const toCapitalize = (word: string) => {
+	return word[0].toUpperCase() + word.slice(1);
+};

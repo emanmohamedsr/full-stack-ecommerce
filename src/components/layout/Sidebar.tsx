@@ -22,7 +22,7 @@ import {
 	Spinner,
 	VStack,
 } from "@chakra-ui/react";
-import { FiHome, FiMenu } from "react-icons/fi";
+import { FiMenu } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { Link } from "react-router-dom";
 import { useColorMode } from "@/hooks/useColorMode";
@@ -33,15 +33,15 @@ import Logo1 from "@/assets/logo1.svg";
 import { ColorModeButton } from "../ui/color-mode";
 
 interface LinkItemProps {
-	name: string;
+	id: number | null;
+	name: string | null;
 	icon: IconType;
-	path: string;
+	documentId: string | null;
 }
 
 interface NavItemProps extends FlexProps {
 	icon: IconType;
-	children: React.ReactNode;
-	path: string;
+	category?: ICategory | null;
 }
 
 interface MobileProps extends FlexProps {
@@ -53,12 +53,64 @@ interface SidebarProps extends BoxProps {
 	onClose: () => void;
 }
 
-const LinkItems: Array<LinkItemProps> = [
-	{ name: "Home", icon: FiHome, path: "/" },
-];
-
+import { BiCategoryAlt } from "react-icons/bi";
+import { LuEyeClosed } from "react-icons/lu";
+import { GiHeartBottle } from "react-icons/gi";
+import { PiShirtFoldedThin } from "react-icons/pi";
+import { BsWatch } from "react-icons/bs";
+import { GiRunningShoe } from "react-icons/gi";
+import { BiHappyBeaming } from "react-icons/bi";
+import { GiSunglasses } from "react-icons/gi";
+import { LuShirt } from "react-icons/lu";
+import { BsHandbag } from "react-icons/bs";
+import { PiDressThin } from "react-icons/pi";
+import { GiEarrings } from "react-icons/gi";
+import { PiHighHeelThin } from "react-icons/pi";
+import { GiPocketWatch } from "react-icons/gi";
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+	const { data: categoriesData, isLoading } = useGetCategoriesQuery({});
 	const { colorMode } = useColorMode();
+	const CategoriesIcons: Array<IconType> = [
+		LuEyeClosed,
+		GiHeartBottle,
+		PiShirtFoldedThin,
+		GiRunningShoe,
+		BsWatch,
+		BiHappyBeaming,
+		GiSunglasses,
+		LuShirt,
+		BsHandbag,
+		PiDressThin,
+		GiEarrings,
+		PiHighHeelThin,
+		GiPocketWatch,
+	];
+	const LinkItems = (): Array<LinkItemProps> => {
+		const defaultCategory = categoriesData.data?.map(
+			(category: ICategory, index: number) => ({
+				id: category.id ?? null,
+				name: category.title ?? null,
+				icon: CategoriesIcons[index] || BiCategoryAlt,
+				documentId: category.documentId ?? null,
+			}),
+		);
+		defaultCategory?.unshift({
+			name: "All",
+			icon: BiCategoryAlt,
+			documentId: null,
+		});
+		return (
+			defaultCategory || [
+				{
+					name: "All",
+					icon: BiCategoryAlt,
+					documentId: null,
+				},
+			]
+		);
+	};
+
+	if (isLoading) return <Spinner />;
 	return (
 		<Box
 			transition='3s ease'
@@ -68,6 +120,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			w={{ base: "full", md: 60 }}
 			pos='fixed'
 			h='full'
+			overflowY='auto'
 			{...rest}>
 			<Flex h='20' alignItems='center' mx='8' justifyContent='space-between'>
 				<Link to='/'>
@@ -86,45 +139,67 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 				</Link>
 				<CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
 			</Flex>
-			{LinkItems.map((link) => (
-				<NavItem key={link.name} icon={link.icon} path={link.path}>
-					{link.name}
-				</NavItem>
+			{LinkItems().map((link) => (
+				<NavItem
+					key={link.name}
+					icon={link.icon}
+					category={
+						link.documentId && link.name && link.id
+							? { id: link.id, title: link.name, documentId: link.documentId }
+							: null
+					}
+				/>
 			))}
 		</Box>
 	);
 };
 
-const NavItem = ({ icon, children, path, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, category, ...rest }: NavItemProps) => {
+	const dispatch = useDispatch();
+	const selectedCategory = useSelector(selectCategory);
+	const { colorMode } = useColorMode();
+	const isActive =
+		selectedCategory === category ||
+		(selectedCategory === null && category === null);
+
 	return (
-		<Link to={path}>
-			<Box style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
-				<Flex
-					align='center'
-					p='4'
-					mx='4'
-					borderRadius='lg'
-					role='group'
-					cursor='pointer'
-					_hover={{
-						bg: "teal.700",
-						color: "white",
-					}}
-					{...rest}>
-					{icon && (
-						<Icon
-							mr='4'
-							fontSize='16'
-							_groupHover={{
-								color: "white",
-							}}
-							as={icon}
-						/>
-					)}
-					{children}
-				</Flex>
-			</Box>
-		</Link>
+		<Box
+			style={{ textDecoration: "none" }}
+			_focus={{ boxShadow: "none" }}
+			onClick={() => {
+				dispatch(setCategory(category ? category : null));
+			}}>
+			<Flex
+				align='center'
+				p='4'
+				mx='4'
+				borderRadius='lg'
+				role='group'
+				cursor='pointer'
+				bg={isActive ? "teal.700" : "transparent"}
+				color={isActive ? "white" : "inherit"}
+				_hover={{
+					bg: `${
+						!isActive && (colorMode === "light" ? "teal.100" : "gray.800")
+					}`,
+					color: `${!isActive && (colorMode === "light" ? "black" : "white")}`,
+				}}
+				{...rest}>
+				{icon && (
+					<Icon
+						mr='4'
+						fontSize='16'
+						color={isActive ? "white" : "inherit"}
+						as={icon}
+					/>
+				)}
+				{category ? (
+					<Text>{toCapitalize(category.title)}</Text>
+				) : (
+					<Text>All</Text>
+				)}
+			</Flex>
+		</Box>
 	);
 };
 
@@ -227,6 +302,10 @@ import { useLazyGetMeQuery } from "@/services/UserApi";
 import { useEffect, useState } from "react";
 import type { IUser } from "@/interfaces/User";
 import { clearSession, setUserSession } from "@/app/features/authSlice";
+import { useGetCategoriesQuery } from "@/services/categoriesApi";
+import type { ICategory } from "@/interfaces/Product";
+import { toCapitalize } from "@/utils";
+import { selectCategory, setCategory } from "@/app/features/categorySlice";
 
 const Sidebar = () => {
 	const { open, onOpen, onClose } = useDisclosure();

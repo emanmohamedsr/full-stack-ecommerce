@@ -2,23 +2,53 @@ import { clearSession, setUserSession } from "@/app/features/authSlice";
 import type { RootState } from "@/app/store";
 import type { IUser } from "@/interfaces/User";
 import { useLazyGetMeQuery } from "@/services/UserApi";
-import { Box, HStack, Spinner, Table, Text, VStack } from "@chakra-ui/react";
+import {
+	Box,
+	Button,
+	Flex,
+	HStack,
+	Spinner,
+	Table,
+	Text,
+	VStack,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import cookieService from "@/services/Cookie";
 import ErrorHandler from "@/components/error/ErrorHandler";
-
+import { useLazyGetProductsQuery } from "@/services/productsApi";
+import { useLazyGetOneCategoryQuery } from "@/services/categoriesApi";
+import type { ICategory, IProduct } from "@/interfaces/Product";
+import type { IError } from "@/interfaces/Error";
+import { toaster } from "@/config/toaster";
+import ProductCell from "@/components/ProductCell";
+import EmptyProductsState from "@/components/EmptyProductsState";
+import { VscEmptyWindow } from "react-icons/vsc";
+import DrawerForm from "@/components/DrawerForm";
+import { useNavigate } from "react-router-dom";
+import { selectCategory } from "@/app/features/categorySlice";
 const AdminDashboardPage = () => {
+	const navigate = useNavigate();
+	const [data, setData] = useState<Array<IProduct>>();
+	const [currentCategory, setCurrentCategory] = useState<ICategory | null>(
+		null,
+	);
+
+	const [triggerGetProducts, { isLoading: isLoadingProducts }] =
+		useLazyGetProductsQuery();
+	const [triggerGetCategoryProducts, { isLoading: isLoadingCategoryProducts }] =
+		useLazyGetOneCategoryQuery();
 	const { token, user } = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
 	const [triggerGetMe, { isLoading, isError, error }] = useLazyGetMeQuery();
 	const [validAdmin, setValidAdmin] = useState<boolean>(false);
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+	const selectedCategory = useSelector(selectCategory);
+
 	useEffect(() => {
-		let isMounted = true; // Flag to prevent state updates on unmounted component
+		let isMounted = true;
 
 		const checkAuth = async () => {
-			// If we already have a token and user in store
 			if (token && user) {
 				if (isMounted) {
 					setValidAdmin(user.role?.name === "Admin");
@@ -26,8 +56,6 @@ const AdminDashboardPage = () => {
 				}
 				return;
 			}
-
-			// Check if we have a token in cookies
 			const cookieToken = cookieService.get("ma7al_jwt");
 			if (cookieToken) {
 				try {
@@ -52,16 +80,61 @@ const AdminDashboardPage = () => {
 			} else if (isMounted) {
 				setValidAdmin(false);
 			}
-
 			if (isMounted) setIsCheckingAuth(false);
 		};
 
 		checkAuth();
-		// Cleanup function
+
+		const getAllProducts = async () => {
+			try {
+				const res = await triggerGetProducts({}).unwrap();
+				if (res) {
+					setData(res.data);
+				}
+			} catch (error) {
+				const errorObj = error as IError;
+				toaster.error({
+					title: `${errorObj.data?.error?.status || 500} Error`,
+					description:
+						errorObj.data?.error?.message || "Failed to fetch products",
+				});
+			}
+		};
+		const getOneCategryProducts = async () => {
+			try {
+				const res = await triggerGetCategoryProducts(
+					selectedCategory?.documentId,
+				).unwrap();
+				if (res) {
+					setData(res.data.products);
+					setCurrentCategory(res.data);
+				}
+			} catch (error) {
+				const errorObj = error as IError;
+				toaster.error({
+					title: `${errorObj.data?.error?.status || 500} Error`,
+					description:
+						errorObj.data?.error?.message || "Failed to fetch products",
+				});
+			}
+		};
+		if (!selectedCategory) {
+			getAllProducts();
+		} else {
+			getOneCategryProducts();
+		}
 		return () => {
 			isMounted = false;
 		};
-	}, [dispatch, token, user, triggerGetMe]);
+	}, [
+		dispatch,
+		token,
+		user,
+		triggerGetMe,
+		triggerGetProducts,
+		triggerGetCategoryProducts,
+		selectedCategory,
+	]);
 
 	if (isCheckingAuth || isLoading) {
 		return (
@@ -82,7 +155,9 @@ const AdminDashboardPage = () => {
 		throw error;
 	}
 	if (validAdmin) {
-		return (
+		return isLoadingProducts || isLoadingCategoryProducts ? (
+			<Spinner />
+		) : data && data.length > 0 ? (
 			<Table.ScrollArea borderWidth='1px' borderTop={"none"} maxW='100%'>
 				<Table.Root size='sm' variant='line' striped>
 					<Table.Header>
@@ -96,20 +171,28 @@ const AdminDashboardPage = () => {
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						{/* {products.map((p) => (
-							<Table.Row key={p.id}>
+						{data.map((item) => (
+							<Table.Row key={item.id}>
 								<Table.Cell>
 									<ProductCell
-									product={p}
-								/> 
+										category={item.category || currentCategory}
+										title={item.title}
+										price={item.price}
+										thumbnail={item.thumbnail.url}
+									/>
 								</Table.Cell>
 								<Table.Cell>
 									<Flex align='center' justify='center' gap={2} wrap={"wrap"}>
-										<Button bg={"cyan.700"} color={"white"}>
+										<DrawerForm product={item}>
+											<Button bg={"teal.700"} color={"white"}>
+												Edit
+											</Button>
+										</DrawerForm>
+										<Button
+											onClick={() => navigate(`/products/${item.documentId}`)}
+											bg={"cyan.700"}
+											color={"white"}>
 											view
-										</Button>
-										<Button bg={"teal.700"} color={"white"}>
-											Edit
 										</Button>
 										<Button bg={"red.700"} color={"white"}>
 											Delete
@@ -117,10 +200,16 @@ const AdminDashboardPage = () => {
 									</Flex>
 								</Table.Cell>
 							</Table.Row>
-						))} */}
+						))}
 					</Table.Body>
 				</Table.Root>
 			</Table.ScrollArea>
+		) : (
+			<EmptyProductsState
+				title='No products found'
+				description='Try adjusting your filters or adding new products.'>
+				<VscEmptyWindow />
+			</EmptyProductsState>
 		);
 	}
 	return (

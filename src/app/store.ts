@@ -4,15 +4,23 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 import authReducer from "@/app/features/authSlice";
 import cartReducer from "@/app/features/cartSlice";
+import { categoriesApi } from "@/services/categoriesApi";
+import categryReducer from "@/app/features/categorySlice";
 export const store = configureStore({
 	reducer: {
 		cart: cartReducer,
 		auth: authReducer,
+		category: categryReducer,
 		[productsApi.reducerPath]: productsApi.reducer,
+		[categoriesApi.reducerPath]: categoriesApi.reducer,
 		[UserApi.reducerPath]: UserApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware().concat(productsApi.middleware, UserApi.middleware),
+		getDefaultMiddleware().concat(
+			productsApi.middleware,
+			categoriesApi.middleware,
+			UserApi.middleware,
+		),
 });
 
 store.subscribe(() => {
