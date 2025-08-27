@@ -2,16 +2,7 @@ import { clearSession, setUserSession } from "@/app/features/authSlice";
 import type { RootState } from "@/app/store";
 import type { IUser } from "@/interfaces/User";
 import { useLazyGetMeQuery } from "@/services/UserApi";
-import {
-	Box,
-	Button,
-	Flex,
-	HStack,
-	Spinner,
-	Table,
-	Text,
-	VStack,
-} from "@chakra-ui/react";
+import { Box, HStack, Spinner, Table, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import cookieService from "@/services/Cookie";
@@ -24,11 +15,9 @@ import { toaster } from "@/config/toaster";
 import ProductCell from "@/components/ProductCell";
 import EmptyProductsState from "@/components/EmptyProductsState";
 import { VscEmptyWindow } from "react-icons/vsc";
-import DrawerForm from "@/components/DrawerForm";
-import { useNavigate } from "react-router-dom";
 import { selectCategory } from "@/app/features/categorySlice";
+import ActionsCell from "@/components/ActionsCell";
 const AdminDashboardPage = () => {
-	const navigate = useNavigate();
 	const [data, setData] = useState<Array<IProduct>>();
 	const [currentCategory, setCurrentCategory] = useState<ICategory | null>(
 		null,
@@ -182,22 +171,7 @@ const AdminDashboardPage = () => {
 									/>
 								</Table.Cell>
 								<Table.Cell>
-									<Flex align='center' justify='center' gap={2} wrap={"wrap"}>
-										<DrawerForm product={item}>
-											<Button bg={"teal.700"} color={"white"}>
-												Edit
-											</Button>
-										</DrawerForm>
-										<Button
-											onClick={() => navigate(`/products/${item.documentId}`)}
-											bg={"cyan.700"}
-											color={"white"}>
-											view
-										</Button>
-										<Button bg={"red.700"} color={"white"}>
-											Delete
-										</Button>
-									</Flex>
+									<ActionsCell product={item} />
 								</Table.Cell>
 							</Table.Row>
 						))}

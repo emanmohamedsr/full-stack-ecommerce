@@ -63,6 +63,21 @@ export const productsApi = createApi({
 				return response;
 			},
 		}),
+		deleteProduct: builder.mutation({
+			query: (id) => ({
+				url: `products/${id}`,
+				method: `DELETE`,
+				headers: {
+					Authorization: `Bearer ${CookiesService.get("ma7al_jwt")}`,
+				},
+			}),
+			transformErrorResponse: (response) => {
+				if (response.status === 401) {
+					CookiesService.remove("ma7al_jwt");
+				}
+				return response;
+			},
+		}),
 	}),
 });
 
@@ -72,4 +87,5 @@ export const {
 	useGetOneProductQuery,
 	usePostProductMutation,
 	usePutProductMutation,
+	useDeleteProductMutation,
 } = productsApi;

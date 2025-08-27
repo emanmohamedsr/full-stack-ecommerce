@@ -1,10 +1,8 @@
 import { selectCategory } from "@/app/features/categorySlice";
-import { toaster } from "@/config/toaster";
 import { useColorMode } from "@/hooks/useColorMode";
-import type { IError } from "@/interfaces/Error";
+import type { IFormInputs } from "@/interfaces/FormInputs";
 import type { ICategory, IProduct } from "@/interfaces/Product";
 import { useGetCategoriesQuery } from "@/services/categoriesApi";
-import { usePutProductMutation } from "@/services/productsApi";
 import { toCapitalize } from "@/utils";
 import { ProductSchema } from "@/validation/FormSchema";
 import {
@@ -28,23 +26,15 @@ import { useSelector } from "react-redux";
 interface Iprops {
 	product?: IProduct | null;
 	children: ReactNode;
+	onSubmit: (data: IFormInputs) => void;
 }
 
-interface IFormInputs {
-	title: string;
-	description: string;
-	thumbnail: string;
-	price: number;
-	stock: number;
-	category: string;
-}
-
-const DrawerForm = ({ product, children }: Iprops) => {
+const DrawerForm = ({ product, children, onSubmit }: Iprops) => {
 	const [open, setOpen] = useState(false);
 	const selectedCat: ICategory | null = useSelector(selectCategory);
 	const { data: categories, isLoading: isLoadingCategories } =
 		useGetCategoriesQuery({});
-	const [putProduct, { isLoading: isLoadingPut }] = usePutProductMutation();
+
 	const {
 		register,
 		handleSubmit,
@@ -68,37 +58,9 @@ const DrawerForm = ({ product, children }: Iprops) => {
 		}
 	}, [product, selectedCat, reset]);
 
-	const handlePostProductSubmit = (data: IFormInputs) => {
-		console.log(data);
-	};
-
-	const handlePutProductSubmit = async (data: IFormInputs) => {
-		try {
-			const res = await putProduct({
-				...data,
-				documentId: product?.documentId,
-			}).unwrap();
-			setOpen(false);
-			console.log(res);
-			toaster.success({
-				title: "Success",
-				description: "Product updated successfully",
-			});
-		} catch (error) {
-			const errorObj = error as IError;
-			toaster.error({
-				title: errorObj?.data?.error?.status || "Error",
-				description: errorObj?.data?.error?.message || "An error occurred",
-			});
-		}
-	};
-
 	const handleFormSubmit = (data: IFormInputs) => {
-		if (product) {
-			handlePutProductSubmit(data);
-		} else {
-			handlePostProductSubmit(data);
-		}
+		setOpen(false);
+		onSubmit(data);
 	};
 	const { colorMode } = useColorMode();
 
@@ -248,17 +210,7 @@ const DrawerForm = ({ product, children }: Iprops) => {
 									<Drawer.ActionTrigger asChild>
 										<Button variant='outline'>Cancel</Button>
 									</Drawer.ActionTrigger>
-									<Button
-										type='submit'
-										disabled={isLoadingPut}
-										_disabled={{
-											backgroundColor: "gray.500",
-											cursor: "not-allowed",
-											opacity: 0.4,
-										}}>
-										{isLoadingPut && <Spinner size='sm' />}
-										{isLoadingPut ? "Loading..." : "Submit"}
-									</Button>
+									<Button type='submit'>{product ? "Update" : "Create"}</Button>
 								</Drawer.Footer>
 
 								<Drawer.CloseTrigger asChild>

@@ -159,7 +159,7 @@ const NavItem = ({ icon, category, ...rest }: NavItemProps) => {
 	const selectedCategory = useSelector(selectCategory);
 	const { colorMode } = useColorMode();
 	const isActive =
-		selectedCategory === category ||
+		selectedCategory?.documentId === category?.documentId ||
 		(selectedCategory === null && category === null);
 
 	return (

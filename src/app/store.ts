@@ -26,6 +26,8 @@ export const store = configureStore({
 store.subscribe(() => {
 	const cartState = store.getState().cart.products;
 	localStorage.setItem("cart", JSON.stringify(cartState));
+	const selectedCategory = store.getState().category.category;
+	localStorage.setItem("selectedCategory", JSON.stringify(selectedCategory));
 });
 
 export type RootState = ReturnType<typeof store.getState>;

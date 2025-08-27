@@ -10,6 +10,15 @@ const initialState: initialState = {
 	category: null,
 };
 
+if (typeof window !== "undefined") {
+	const selectedCategory = JSON.parse(
+		localStorage.getItem("selectedCategory") || "null",
+	);
+	if (selectedCategory) {
+		initialState.category = selectedCategory;
+	}
+}
+
 const categorySlice = createSlice({
 	name: "category",
 	initialState,
