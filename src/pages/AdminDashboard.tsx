@@ -2,11 +2,9 @@ import { clearSession, setUserSession } from "@/app/features/authSlice";
 import type { RootState } from "@/app/store";
 import type { IUser } from "@/interfaces/User";
 import { useLazyGetMeQuery } from "@/services/UserApi";
-import { Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import cookieService from "@/services/Cookie";
-import ErrorHandler from "@/components/error/ErrorHandler";
 import {
 	useLazyGetProductsQuery,
 	usePostProductMutation,
@@ -184,19 +182,7 @@ const AdminDashboardPage = () => {
 				</EmptyProductsState>
 			);
 	}
-	return (
-		<Box
-			position='absolute'
-			top={-64}
-			left={{ base: 0, md: -60 }}
-			right={0}
-			bottom={0}>
-			<ErrorHandler
-				defaultTitle='access denied'
-				defaultStatusCode={403}
-				showHome></ErrorHandler>
-		</Box>
-	);
+	return null;
 };
 
 export default AdminDashboardPage;

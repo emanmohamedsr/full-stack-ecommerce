@@ -12,12 +12,7 @@ const LoadingOverlay = ({ description, isOpen }: IProps) => {
 	const [open] = useState(isOpen || false);
 
 	return (
-		<Drawer.Root
-			placement='top'
-			size={"full"}
-			open={open}
-			// onOpenChange={(e) => setOpen(e.open)}
-		>
+		<Drawer.Root placement='top' size={"full"} open={open}>
 			<Portal>
 				<Drawer.Backdrop />
 				<Drawer.Positioner>

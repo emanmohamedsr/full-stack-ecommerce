@@ -40,8 +40,8 @@ const ActionsCell = ({ product }: Iprops) => {
 	const handleEdit = async (data: IFormInputs) => {
 		try {
 			await putProduct({
-				...data,
 				documentId: product?.documentId,
+				...data,
 			}).unwrap();
 			toaster.success({
 				title: "Success",

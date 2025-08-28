@@ -60,6 +60,17 @@ const DrawerForm = ({ product, children, onSubmit }: Iprops) => {
 
 	const handleFormSubmit = (data: IFormInputs) => {
 		setOpen(false);
+		// const fullCategory = categories?.data?.find(
+		// 	(cat: ICategory) => cat.title === data.category,
+		// );
+		// const fullThumbnail = product?.thumbnail
+		// 	? product.thumbnail
+		// 	: { url: data.thumbnail };
+		// const payload = {
+		// 	...data,
+		// 	thumbnail: fullThumbnail,
+		// 	category: fullCategory,
+		// };
 		onSubmit(data);
 	};
 	const { colorMode } = useColorMode();

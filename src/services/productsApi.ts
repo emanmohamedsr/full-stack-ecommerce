@@ -7,17 +7,11 @@ export const productsApi = createApi({
 		getProducts: builder.query({
 			query: () => ({
 				url: `products?populate=thumbnail&populate=category`,
-				// params: {
-				// 	populate: "thumbnail, category",
-				// },
 			}),
 		}),
 		getOneProduct: builder.query({
 			query: (id) => ({
 				url: `products/${id}?populate=thumbnail&populate=category`,
-				// params: {
-				// 	populate: "thumbnail, category",
-				// },
 			}),
 			transformResponse: (response) => response.data,
 		}),
@@ -57,6 +51,8 @@ export const productsApi = createApi({
 						description: product.description,
 						price: product.price,
 						stock: product.stock,
+						// thumbnail: product.thumbnail,
+						// category: product.category,
 					},
 				};
 				return {

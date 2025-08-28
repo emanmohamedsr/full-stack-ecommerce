@@ -30,6 +30,32 @@ import { CgProfile } from "react-icons/cg";
 import Logo0 from "@/assets/logo.svg";
 import Logo1 from "@/assets/logo1.svg";
 import { ColorModeButton } from "../ui/color-mode";
+import { BiCategoryAlt } from "react-icons/bi";
+import { LuEyeClosed } from "react-icons/lu";
+import { GiHeartBottle } from "react-icons/gi";
+import { PiShirtFoldedThin } from "react-icons/pi";
+import { BsWatch } from "react-icons/bs";
+import { GiRunningShoe } from "react-icons/gi";
+import { BiHappyBeaming } from "react-icons/bi";
+import { GiSunglasses } from "react-icons/gi";
+import { LuShirt } from "react-icons/lu";
+import { BsHandbag } from "react-icons/bs";
+import { PiDressThin } from "react-icons/pi";
+import { GiEarrings } from "react-icons/gi";
+import { PiHighHeelThin } from "react-icons/pi";
+import { GiPocketWatch } from "react-icons/gi";
+import cookieService from "@/services/Cookie";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/app/store";
+import { useLazyGetMeQuery } from "@/services/UserApi";
+import { useEffect, useState } from "react";
+import type { IUser } from "@/interfaces/User";
+import { clearSession, setUserSession } from "@/app/features/authSlice";
+import { useGetCategoriesQuery } from "@/services/categoriesApi";
+import type { ICategory } from "@/interfaces/Product";
+import { toCapitalize } from "@/utils";
+import { selectCategory, setCategory } from "@/app/features/categorySlice";
+import LoadingOverlay from "../loading";
 
 interface LinkItemProps {
 	id: number | null;
@@ -52,20 +78,6 @@ interface SidebarProps extends BoxProps {
 	onClose: () => void;
 }
 
-import { BiCategoryAlt } from "react-icons/bi";
-import { LuEyeClosed } from "react-icons/lu";
-import { GiHeartBottle } from "react-icons/gi";
-import { PiShirtFoldedThin } from "react-icons/pi";
-import { BsWatch } from "react-icons/bs";
-import { GiRunningShoe } from "react-icons/gi";
-import { BiHappyBeaming } from "react-icons/bi";
-import { GiSunglasses } from "react-icons/gi";
-import { LuShirt } from "react-icons/lu";
-import { BsHandbag } from "react-icons/bs";
-import { PiDressThin } from "react-icons/pi";
-import { GiEarrings } from "react-icons/gi";
-import { PiHighHeelThin } from "react-icons/pi";
-import { GiPocketWatch } from "react-icons/gi";
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 	const { data: categoriesData, isLoading: isLoadingCategories } =
 		useGetCategoriesQuery({});
@@ -86,28 +98,22 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 		GiPocketWatch,
 	];
 	const LinkItems = (): Array<LinkItemProps> => {
-		const defaultCategory = categoriesData.data?.map(
-			(category: ICategory, index: number) => ({
+		const defaultCategory =
+			categoriesData?.data?.map((category: ICategory, index: number) => ({
 				id: category.id ?? null,
 				name: category.title ?? null,
 				icon: CategoriesIcons[index] || BiCategoryAlt,
 				documentId: category.documentId ?? null,
-			}),
-		);
-		defaultCategory?.unshift({
-			name: "All",
-			icon: BiCategoryAlt,
-			documentId: null,
-		});
-		return (
-			defaultCategory || [
-				{
-					name: "All",
-					icon: BiCategoryAlt,
-					documentId: null,
-				},
-			]
-		);
+			})) || [];
+		return [
+			{
+				name: "All",
+				icon: BiCategoryAlt,
+				documentId: null,
+				id: null,
+			},
+			...defaultCategory,
+		];
 	};
 
 	return (
@@ -138,6 +144,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 				</Link>
 				<CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
 			</Flex>
+
+			<NavItem icon={BiCategoryAlt} category={null} />
+
 			{isLoadingCategories
 				? Array.from({ length: 4 }, (_, index) => (
 						<Skeleton
@@ -152,21 +161,23 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 							}}
 						/>
 				  ))
-				: LinkItems().map((link) => (
-						<NavItem
-							key={link.name}
-							icon={link.icon}
-							category={
-								link.documentId && link.name && link.id
-									? {
-											id: link.id,
-											title: link.name,
-											documentId: link.documentId,
-									  }
-									: null
-							}
-						/>
-				  ))}
+				: LinkItems()
+						.filter((link) => link.name !== "All")
+						.map((link) => (
+							<NavItem
+								key={link.name}
+								icon={link.icon}
+								category={
+									link.documentId && link.name && link.id
+										? {
+												id: link.id,
+												title: link.name,
+												documentId: link.documentId,
+										  }
+										: null
+								}
+							/>
+						))}
 		</Box>
 	);
 };
@@ -312,19 +323,6 @@ const MobileNav = ({ user, onOpen, ...rest }: MobileProps) => {
 	);
 };
 
-import cookieService from "@/services/Cookie";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "@/app/store";
-import { useLazyGetMeQuery } from "@/services/UserApi";
-import { useEffect, useState } from "react";
-import type { IUser } from "@/interfaces/User";
-import { clearSession, setUserSession } from "@/app/features/authSlice";
-import { useGetCategoriesQuery } from "@/services/categoriesApi";
-import type { ICategory } from "@/interfaces/Product";
-import { toCapitalize } from "@/utils";
-import { selectCategory, setCategory } from "@/app/features/categorySlice";
-import LoadingOverlay from "../loading";
-
 const Sidebar = () => {
 	const { open, onOpen, onClose } = useDisclosure();
 	const { colorMode } = useColorMode();
@@ -336,10 +334,9 @@ const Sidebar = () => {
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
 	useEffect(() => {
-		let isMounted = true; // Flag to prevent state updates on unmounted component
+		let isMounted = true;
 
 		const checkAuth = async () => {
-			// If we already have a token and user in store
 			if (token && user) {
 				if (isMounted) {
 					setIsAdmin(user.role?.name === "Admin");
@@ -348,7 +345,6 @@ const Sidebar = () => {
 				return;
 			}
 
-			// Check if we have a token in cookies
 			const cookieToken = cookieService.get("ma7al_jwt");
 			if (cookieToken) {
 				try {
@@ -379,7 +375,6 @@ const Sidebar = () => {
 
 		checkAuth();
 
-		// Cleanup function
 		return () => {
 			isMounted = false;
 		};
@@ -393,9 +388,11 @@ const Sidebar = () => {
 			/>
 		);
 	}
+
 	if (isError) {
 		throw error;
 	}
+
 	if (user && isAdmin) {
 		return (
 			<Box minH='100vh' bg={colorMode === "light" ? "gray.100" : "gray.900"}>
@@ -413,6 +410,7 @@ const Sidebar = () => {
 			</Box>
 		);
 	}
+	return null;
 };
 
 export default Sidebar;
