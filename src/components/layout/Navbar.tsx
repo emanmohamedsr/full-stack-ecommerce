@@ -9,11 +9,9 @@ import {
 	IconButton,
 	Image,
 	Portal,
-	Spinner,
 	Stack,
 	Text,
 	useDisclosure,
-	VStack,
 } from "@chakra-ui/react";
 import { useColorMode } from "@/hooks/useColorMode";
 import { Menu } from "@chakra-ui/react";
@@ -35,6 +33,7 @@ import type { IUser } from "@/interfaces/User";
 import { clearSession, setUserSession } from "@/app/features/authSlice";
 import { useEffect, useState } from "react";
 import { selectCartProducts } from "@/app/features/cartSlice";
+import LoadingOverlay from "../loading";
 interface Props {
 	children: React.ReactNode;
 }
@@ -60,7 +59,8 @@ const Navbar = () => {
 	const cartProducts = useSelector(selectCartProducts);
 	const { token, user } = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
-	const [triggerGetMe, { isLoading, isError, error }] = useLazyGetMeQuery();
+	const [triggerGetMe, { isLoading: isLoadingUser, isError, error }] =
+		useLazyGetMeQuery();
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 	const [isAdmin, setIsAdmin] = useState<boolean>(false);
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -121,25 +121,12 @@ const Navbar = () => {
 
 	const { colorMode } = useColorMode();
 	const { open, onOpen, onClose } = useDisclosure();
-	if (isCheckingAuth || isLoading) {
+	if (isCheckingAuth || isLoadingUser) {
 		return (
-			<VStack
-				position='absolute'
-				zIndex={1000}
-				top={0}
-				left={0}
-				right={0}
-				bottom={0}
-				bg='gray.600'
-				colorPalette='teal'
-				gap={4}
-				align='center'
-				justify='center'
-				height='100vh'
-				w={"100vw"}>
-				<Spinner color='teal.600' size='xl' />
-				<Text color='teal.600'>Checking authentication...</Text>
-			</VStack>
+			<LoadingOverlay
+				isOpen={isCheckingAuth || isLoadingUser}
+				description='Checking authentication...'
+			/>
 		);
 	}
 	if (isError) {

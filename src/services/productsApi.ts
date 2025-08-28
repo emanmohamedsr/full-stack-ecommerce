@@ -22,14 +22,26 @@ export const productsApi = createApi({
 			transformResponse: (response) => response.data,
 		}),
 		postProduct: builder.mutation({
-			query: (product) => ({
-				url: `products`,
-				method: `POST`,
-				body: product,
-				headers: {
-					Authorization: `Bearer ${CookiesService.get("ma7al_jwt")}`,
-				},
-			}),
+			query: (product) => {
+				const requestData = {
+					data: {
+						title: product.title,
+						description: product.description,
+						price: product.price,
+						stock: product.stock,
+						thumbnail: product.thumbnail,
+						category: product.category,
+					},
+				};
+				return {
+					url: `products`,
+					method: `POST`,
+					body: requestData,
+					headers: {
+						Authorization: `Bearer ${CookiesService.get("ma7al_jwt")}`,
+					},
+				};
+			},
 			transformErrorResponse: (response) => {
 				if (response.status === 401) {
 					CookiesService.remove("ma7al_jwt");

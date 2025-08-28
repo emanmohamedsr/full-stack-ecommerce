@@ -39,11 +39,10 @@ const ActionsCell = ({ product }: Iprops) => {
 	};
 	const handleEdit = async (data: IFormInputs) => {
 		try {
-			const res = await putProduct({
+			await putProduct({
 				...data,
 				documentId: product?.documentId,
 			}).unwrap();
-			console.log(res);
 			toaster.success({
 				title: "Success",
 				description: "Product updated successfully",

@@ -19,8 +19,7 @@ import {
 	Stack,
 	Image,
 	HStack,
-	Spinner,
-	VStack,
+	Skeleton,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
 import type { IconType } from "react-icons";
@@ -68,7 +67,8 @@ import { GiEarrings } from "react-icons/gi";
 import { PiHighHeelThin } from "react-icons/pi";
 import { GiPocketWatch } from "react-icons/gi";
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-	const { data: categoriesData, isLoading } = useGetCategoriesQuery({});
+	const { data: categoriesData, isLoading: isLoadingCategories } =
+		useGetCategoriesQuery({});
 	const { colorMode } = useColorMode();
 	const CategoriesIcons: Array<IconType> = [
 		LuEyeClosed,
@@ -110,7 +110,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 		);
 	};
 
-	if (isLoading) return <Spinner />;
 	return (
 		<Box
 			transition='3s ease'
@@ -139,17 +138,35 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 				</Link>
 				<CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
 			</Flex>
-			{LinkItems().map((link) => (
-				<NavItem
-					key={link.name}
-					icon={link.icon}
-					category={
-						link.documentId && link.name && link.id
-							? { id: link.id, title: link.name, documentId: link.documentId }
-							: null
-					}
-				/>
-			))}
+			{isLoadingCategories
+				? Array.from({ length: 4 }, (_, index) => (
+						<Skeleton
+							key={index}
+							variant='shine'
+							height='4'
+							m={6}
+							p={6}
+							css={{
+								"--start-color": "colors.gray.600",
+								"--end-color": "colors.gray.300",
+							}}
+						/>
+				  ))
+				: LinkItems().map((link) => (
+						<NavItem
+							key={link.name}
+							icon={link.icon}
+							category={
+								link.documentId && link.name && link.id
+									? {
+											id: link.id,
+											title: link.name,
+											documentId: link.documentId,
+									  }
+									: null
+							}
+						/>
+				  ))}
 		</Box>
 	);
 };
@@ -306,13 +323,15 @@ import { useGetCategoriesQuery } from "@/services/categoriesApi";
 import type { ICategory } from "@/interfaces/Product";
 import { toCapitalize } from "@/utils";
 import { selectCategory, setCategory } from "@/app/features/categorySlice";
+import LoadingOverlay from "../loading";
 
 const Sidebar = () => {
 	const { open, onOpen, onClose } = useDisclosure();
 	const { colorMode } = useColorMode();
 	const { token, user } = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
-	const [triggerGetMe, { isLoading, isError, error }] = useLazyGetMeQuery();
+	const [triggerGetMe, { isLoading: isLoadingAdmin, isError, error }] =
+		useLazyGetMeQuery();
 	const [isAdmin, setIsAdmin] = useState<boolean>(false);
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
@@ -366,25 +385,12 @@ const Sidebar = () => {
 		};
 	}, [dispatch, token, user, triggerGetMe]);
 
-	if (isCheckingAuth || isLoading) {
+	if (isCheckingAuth || isLoadingAdmin) {
 		return (
-			<VStack
-				position='absolute'
-				zIndex={1000}
-				top={0}
-				left={0}
-				right={0}
-				bottom={0}
-				bg='gray.600'
-				colorPalette='teal'
-				gap={4}
-				align='center'
-				justify='center'
-				height='100vh'
-				w={"100vw"}>
-				<Spinner color='teal.600' size='xl' />
-				<Text color='teal.600'>Checking authentication...</Text>
-			</VStack>
+			<LoadingOverlay
+				isOpen={isCheckingAuth || isLoadingAdmin}
+				description='Checking authentication...'
+			/>
 		);
 	}
 	if (isError) {
