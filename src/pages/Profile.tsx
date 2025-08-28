@@ -1,21 +1,13 @@
 import type { RootState } from "@/app/store";
 import { useColorMode } from "@/hooks/useColorMode";
 import { useLazyGetMeQuery } from "@/services/UserApi";
-import {
-	Image,
-	Stack,
-	DataList,
-	Button,
-	Box,
-	Spinner,
-	Text,
-	VStack,
-} from "@chakra-ui/react";
+import { Image, Stack, DataList, Button, Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import cookieService from "@/services/Cookie";
 import type { IUser } from "@/interfaces/User";
 import { clearSession, setUserSession } from "@/app/features/authSlice";
+import LoadingOverlay from "@/components/loading";
 
 const ProfilePage = () => {
 	const { colorMode } = useColorMode();
@@ -76,23 +68,10 @@ const ProfilePage = () => {
 	}, [dispatch, token, user, triggerGetMe]);
 	if (isCheckingAuth || isLoading) {
 		return (
-			<VStack
-				position='absolute'
-				zIndex={1000}
-				top={0}
-				left={0}
-				right={0}
-				bottom={0}
-				bg='gray.600'
-				colorPalette='teal'
-				gap={4}
-				align='center'
-				justify='center'
-				height='100vh'
-				w={"100vw"}>
-				<Spinner color='teal.600' size='xl' />
-				<Text color='teal.600'>Checking authentication...</Text>
-			</VStack>
+			<LoadingOverlay
+				isOpen={isCheckingAuth || isLoading}
+				description='Checking authentication...'
+			/>
 		);
 	}
 	if (isError) {

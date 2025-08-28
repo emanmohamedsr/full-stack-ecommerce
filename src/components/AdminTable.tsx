@@ -29,7 +29,7 @@ const AdminTable = ({
 							<Button
 								disabled={isLoadingAddProduct}
 								_disabled={{ bg: "gray.500", cursor: "not-allowed" }}
-								bg='teal.600'
+								bg='teal.700'
 								color='white'>
 								{isLoadingAddProduct && <Spinner size='sm' />}
 								{isLoadingAddProduct ? "Adding..." : "Add Product"}
