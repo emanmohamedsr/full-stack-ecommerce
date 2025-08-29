@@ -24,9 +24,12 @@ const cartSlice = createSlice({
 		handleCartProducts: (state, action: PayloadAction<IProduct[]>) => {
 			state.products = action.payload;
 		},
+		clearCart: (state) => {
+			state.products = [];
+		},
 	},
 });
 
-export const { handleCartProducts } = cartSlice.actions;
+export const { handleCartProducts, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
 export const selectCartProducts = (state: RootState) => state.cart.products;

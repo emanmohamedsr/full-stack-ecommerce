@@ -22,8 +22,10 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
+	const navigate = useNavigate();
 	const cartProducts = useSelector(selectCartProducts);
 	const dispatch = useDispatch();
 	if (cartProducts.length === 0) {
@@ -48,7 +50,11 @@ const CartPage = () => {
 								${calcTotalPrice(cartProducts).toFixed(2)}
 							</Text>
 						</HStack>
-						<Button bg={"teal.700"} color={"white"}>
+
+						<Button
+							onClick={() => navigate("/checkout")}
+							bg={"teal.700"}
+							color={"white"}>
 							<IoBagCheckOutline />
 							Checkout
 						</Button>

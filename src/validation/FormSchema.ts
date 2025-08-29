@@ -51,3 +51,31 @@ export const ProductSchema = yup.object({
 		.required("Stock is required"),
 	category: yup.string().required("Category is required"),
 });
+
+export const LocationSchema = yup.object({
+	country: yup.string().required("Country is required"),
+	street_address: yup.string().required("Street address is required"),
+	city: yup.string().required("City is required"),
+	state: yup.string().required("State is required"),
+	postal_code: yup.string().required("ZIP/Postal code is required"),
+});
+
+export const PaymentSchema = yup.object({
+	card_name: yup.string().required("Cardholder name is required"),
+	card_number: yup
+		.string()
+		.matches(/^[0-9]{16}$/, "Card number must be 16 digits")
+		.required("Card number is required"),
+	expiration_date: yup
+		.string()
+		.matches(
+			/^(0[1-9]|1[0-2])\/?([0-9]{2})$/,
+			"Expiration date must be in MM/YY format",
+		)
+		.required("Expiration date is required"),
+	cvv: yup
+		.string()
+		.matches(/^[0-9]{3,4}$/, "CVV must be 3 or 4 digits")
+		.required("CVV is required"),
+	payment_method: yup.string().required("Payment method is required"),
+});

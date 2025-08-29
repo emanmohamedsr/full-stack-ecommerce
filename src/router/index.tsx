@@ -5,6 +5,7 @@ import AboutPage from "@/pages/About";
 import AdminDashboardPage from "@/pages/AdminDashboard";
 import RootAdminLayout from "@/pages/AdminLayout";
 import CartPage from "@/pages/Cart";
+import CheckoutPage from "@/pages/Checkout";
 import RootLayout from "@/pages/Layout";
 import LoginPage from "@/pages/Login";
 import LogoutPage from "@/pages/Logout";
@@ -56,6 +57,14 @@ const router = createBrowserRouter(
 						element={
 							<RouterAuth shouldHaveToken={true} redirectPath='/login'>
 								<ProfilePage />
+							</RouterAuth>
+						}
+					/>
+					<Route
+						path='checkout'
+						element={
+							<RouterAuth shouldHaveToken={true} redirectPath='/login'>
+								<CheckoutPage />
 							</RouterAuth>
 						}
 					/>
