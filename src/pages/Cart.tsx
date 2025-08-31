@@ -1,4 +1,5 @@
 import {
+	clearCart,
 	handleCartProducts,
 	selectCartProducts,
 } from "@/app/features/cartSlice";
@@ -25,9 +26,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const cartProducts = useSelector(selectCartProducts);
-	const dispatch = useDispatch();
 	if (cartProducts.length === 0) {
 		return (
 			<Stack justifyContent={"center"} alignItems={"center"}>
@@ -51,13 +52,25 @@ const CartPage = () => {
 							</Text>
 						</HStack>
 
-						<Button
-							onClick={() => navigate("/checkout")}
-							bg={"teal.700"}
-							color={"white"}>
-							<IoBagCheckOutline />
-							Checkout
-						</Button>
+						<HStack>
+							<Button
+								onClick={() => dispatch(clearCart())}
+								variant={"outline"}
+								bg={"red.700"}
+								color={"white"}
+								borderWidth={"1px"}
+								borderColor={"red.700"}
+								borderStyle={"solid"}>
+								Clear Cart
+							</Button>
+							<Button
+								onClick={() => navigate("/checkout")}
+								bg={"teal.700"}
+								color={"white"}>
+								<IoBagCheckOutline />
+								Checkout
+							</Button>
+						</HStack>
 					</HStack>
 				</Table.Caption>
 				<Table.Header>
