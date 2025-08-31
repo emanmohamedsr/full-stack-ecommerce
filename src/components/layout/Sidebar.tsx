@@ -9,7 +9,6 @@ import {
 	Icon,
 	Text,
 	Drawer,
-	DrawerContent,
 	useDisclosure,
 	Menu,
 	Portal,
@@ -400,10 +399,12 @@ const Sidebar = () => {
 					onClose={() => onClose}
 					display={{ base: "none", md: "block" }}
 				/>
-				<Drawer.Root open={open} size='full'>
-					<DrawerContent>
-						<SidebarContent onClose={onClose} />
-					</DrawerContent>
+				<Drawer.Root placement={"start"} open={open} size='full'>
+					<Drawer.Positioner>
+						<Drawer.Content>
+							<SidebarContent onClose={onClose} />
+						</Drawer.Content>
+					</Drawer.Positioner>
 				</Drawer.Root>
 				<MobileNav user={user} onOpen={onOpen} />
 				<Box ml={{ base: 0, md: 60 }} p='4'></Box>

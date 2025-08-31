@@ -5,6 +5,7 @@ import {
 } from "@/app/features/cartSlice";
 import EmptyProductsState from "@/components/EmptyProductsState";
 import ProductCell from "@/components/ProductCell";
+import { toaster } from "@/config/toaster";
 import type { IProduct } from "@/interfaces/Product";
 import {
 	calcTotalPrice,
@@ -54,7 +55,14 @@ const CartPage = () => {
 
 						<HStack>
 							<Button
-								onClick={() => dispatch(clearCart())}
+								onClick={() => {
+									dispatch(clearCart());
+									toaster.create({
+										description: "Cart cleared",
+										type: "info",
+										closable: true,
+									});
+								}}
 								variant={"outline"}
 								bg={"red.700"}
 								color={"white"}
