@@ -11,7 +11,7 @@ import { GiMoneyStack } from "react-icons/gi";
 import { BsStack } from "react-icons/bs";
 import { TbCategory2 } from "react-icons/tb";
 import Product from "../assets/product.svg";
-import { useGetOneProductQuery } from "@/services/productsApi";
+import { useGetOneProductQuery } from "@/app/services/productsApi";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductPageSkeleton from "@/components/ProductPageSkeleton";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";

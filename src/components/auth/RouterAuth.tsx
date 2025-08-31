@@ -5,7 +5,7 @@ import CookiesService from "@/services/Cookie";
 import { useEffect, useState } from "react";
 import { setUserSession, clearSession } from "@/app/features/authSlice";
 import type { IResponse } from "@/interfaces/User";
-import { useLazyGetMeQuery } from "@/services/UserApi";
+import { useLazyGetMeQuery } from "@/app/services/UserApi";
 import { Spinner, Text, VStack } from "@chakra-ui/react";
 import { toaster } from "@/config/toaster";
 

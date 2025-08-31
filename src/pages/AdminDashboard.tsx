@@ -1,15 +1,15 @@
 import { clearSession, setUserSession } from "@/app/features/authSlice";
 import type { RootState } from "@/app/store";
 import type { IUser } from "@/interfaces/User";
-import { useLazyGetMeQuery } from "@/services/UserApi";
+import { useLazyGetMeQuery } from "@/app/services/UserApi";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import cookieService from "@/services/Cookie";
 import {
 	useLazyGetProductsQuery,
 	usePostProductMutation,
-} from "@/services/productsApi";
-import { useLazyGetOneCategoryQuery } from "@/services/categoriesApi";
+} from "@/app/services/productsApi";
+import { useLazyGetOneCategoryQuery } from "@/app/services/categoriesApi";
 import type { ICategory, IProduct } from "@/interfaces/Product";
 import type { IError } from "@/interfaces/Error";
 import { toaster } from "@/config/toaster";

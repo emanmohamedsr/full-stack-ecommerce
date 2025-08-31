@@ -1,10 +1,10 @@
-import { productsApi } from "@/services/productsApi";
-import { UserApi } from "@/services/UserApi";
+import { productsApi } from "@/app/services/productsApi";
+import { UserApi } from "@/app/services/UserApi";
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 import authReducer from "@/app/features/authSlice";
 import cartReducer from "@/app/features/cartSlice";
-import { categoriesApi } from "@/services/categoriesApi";
+import { categoriesApi } from "@/app/services/categoriesApi";
 import categryReducer from "@/app/features/categorySlice";
 export const store = configureStore({
 	reducer: {

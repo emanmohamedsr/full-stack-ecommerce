@@ -1,6 +1,6 @@
 import { HStack } from "@chakra-ui/react";
 import ProductCard from "./ProductCard";
-import { useGetProductsQuery } from "@/services/productsApi";
+import { useGetProductsQuery } from "@/app/services/productsApi";
 import ProductsSkeleton from "./ProductsSkeleton";
 import EmptyProductsState from "./EmptyProductsState";
 import { VscEmptyWindow } from "react-icons/vsc";

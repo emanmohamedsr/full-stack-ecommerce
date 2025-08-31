@@ -18,7 +18,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SignupSchema } from "@/validation/FormSchema";
 import { useNavigate } from "react-router-dom";
 import { toaster } from "@/config/toaster";
-import { useLazyGetMeQuery, useSignupUserMutation } from "@/services/UserApi";
+import {
+	useLazyGetMeQuery,
+	useSignupUserMutation,
+} from "@/app/services/UserApi";
 import type { IError } from "@/interfaces/Error";
 import type { IResponse, IUser } from "@/interfaces/User";
 import CookieService from "@/services/Cookie";

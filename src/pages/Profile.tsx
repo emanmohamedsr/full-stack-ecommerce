@@ -1,6 +1,6 @@
 import type { RootState } from "@/app/store";
 import { useColorMode } from "@/hooks/useColorMode";
-import { useLazyGetMeQuery } from "@/services/UserApi";
+import { useLazyGetMeQuery } from "@/app/services/UserApi";
 import { Image, Stack, DataList, Button, Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

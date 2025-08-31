@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {
 	useDeleteProductMutation,
 	usePutProductMutation,
-} from "@/services/productsApi";
+} from "@/app/services/productsApi";
 import type { IError } from "@/interfaces/Error";
 import { toaster } from "@/config/toaster";
 import type { IFormInputs } from "@/interfaces/FormInputs";

@@ -17,7 +17,10 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { useLazyGetMeQuery, useLoginUserMutation } from "@/services/UserApi";
+import {
+	useLazyGetMeQuery,
+	useLoginUserMutation,
+} from "@/app/services/UserApi";
 import { toaster } from "@/config/toaster";
 import type { IError } from "@/interfaces/Error";
 import CookieService from "@/services/Cookie";

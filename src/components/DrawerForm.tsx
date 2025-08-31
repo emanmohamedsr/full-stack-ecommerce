@@ -2,7 +2,7 @@ import { selectCategory } from "@/app/features/categorySlice";
 import { useColorMode } from "@/hooks/useColorMode";
 import type { IFormInputs } from "@/interfaces/FormInputs";
 import type { ICategory, IProduct } from "@/interfaces/Product";
-import { useGetCategoriesQuery } from "@/services/categoriesApi";
+import { useGetCategoriesQuery } from "@/app/services/categoriesApi";
 import { toCapitalize } from "@/utils";
 import { ProductSchema } from "@/validation/FormSchema";
 import {

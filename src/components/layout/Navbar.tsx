@@ -28,7 +28,7 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import cookieService from "@/services/Cookie";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/app/store";
-import { useLazyGetMeQuery } from "@/services/UserApi";
+import { useLazyGetMeQuery } from "@/app/services/UserApi";
 import type { IUser } from "@/interfaces/User";
 import { clearSession, setUserSession } from "@/app/features/authSlice";
 import { useEffect, useState } from "react";
