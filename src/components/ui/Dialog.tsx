@@ -31,7 +31,7 @@ const DialogComponent = ({
 		<Dialog.Root lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
 			<Dialog.Trigger asChild>{children}</Dialog.Trigger>
 			<Portal>
-				<Dialog.Backdrop />
+				<Dialog.Backdrop backdropFilter='blur(6px)' bg='blackAlpha.400' />
 				<Dialog.Positioner>
 					<Dialog.Content>
 						<Dialog.Header>
@@ -51,7 +51,7 @@ const DialogComponent = ({
 									setOpen(false);
 									onSubmit();
 								}}>
-								{deleteTheme ? "Delete" : "Save"}
+								{deleteTheme ? "Delete" : "Yes"}
 							</Button>
 						</Dialog.Footer>
 						<Dialog.CloseTrigger asChild>

@@ -22,6 +22,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import DialogComponent from "./ui/Dialog";
 
 interface Iprops {
 	product?: IProduct | null;
@@ -57,20 +58,9 @@ const DrawerForm = ({ product, children, onSubmit }: Iprops) => {
 			});
 		}
 	}, [product, selectedCat, reset]);
-
+	const onSubmitCancel = () => setOpen(false);
 	const handleFormSubmit = (data: IFormInputs) => {
 		setOpen(false);
-		// const fullCategory = categories?.data?.find(
-		// 	(cat: ICategory) => cat.title === data.category,
-		// );
-		// const fullThumbnail = product?.thumbnail
-		// 	? product.thumbnail
-		// 	: { url: data.thumbnail };
-		// const payload = {
-		// 	...data,
-		// 	thumbnail: fullThumbnail,
-		// 	category: fullCategory,
-		// };
 		onSubmit(data);
 	};
 	const { colorMode } = useColorMode();
@@ -78,7 +68,7 @@ const DrawerForm = ({ product, children, onSubmit }: Iprops) => {
 	return (
 		<Drawer.Root
 			open={open}
-			onOpenChange={(e) => setOpen(e.open)}
+			onOpenChange={() => setOpen(true)}
 			size={"sm"}
 			placement={{ mdDown: "bottom", md: "end" }}>
 			<Drawer.Trigger asChild>{children}</Drawer.Trigger>
@@ -218,15 +208,23 @@ const DrawerForm = ({ product, children, onSubmit }: Iprops) => {
 								</Drawer.Body>
 
 								<Drawer.Footer>
-									<Drawer.ActionTrigger asChild>
+									<DialogComponent
+										title='Discard changes?'
+										description='Are you sure you want to discard the changes?'
+										onSubmit={onSubmitCancel}>
 										<Button variant='outline'>Cancel</Button>
-									</Drawer.ActionTrigger>
+									</DialogComponent>
 									<Button type='submit'>{product ? "Update" : "Create"}</Button>
 								</Drawer.Footer>
 
-								<Drawer.CloseTrigger asChild>
-									<CloseButton size='sm' />
-								</Drawer.CloseTrigger>
+								<DialogComponent
+									title='Discard changes?'
+									description='Are you sure you want to discard the changes?'
+									onSubmit={onSubmitCancel}>
+									<Drawer.CloseTrigger asChild>
+										<CloseButton size='sm' />
+									</Drawer.CloseTrigger>
+								</DialogComponent>
 							</Fieldset.Root>
 						</form>
 					</Drawer.Content>
