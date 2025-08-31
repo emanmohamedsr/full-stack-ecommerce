@@ -2,7 +2,7 @@ import { Button, HStack, Spinner, Table, Text } from "@chakra-ui/react";
 import DrawerForm from "./DrawerForm";
 import ActionsCell from "./ActionsCell";
 import ProductCell from "./ProductCell";
-import type { ICategory, IProduct } from "@/interfaces/Product";
+import type { IProduct } from "@/interfaces/Product";
 import type { IFormInputs } from "@/interfaces/FormInputs";
 
 interface IProps {
@@ -10,7 +10,6 @@ interface IProps {
 	data: Array<IProduct>;
 	isLoadingAddProduct: boolean;
 	onAddProduct: (data: IFormInputs) => Promise<void>;
-	currentCategory?: ICategory | null;
 }
 
 const AdminTable = ({
@@ -18,7 +17,6 @@ const AdminTable = ({
 	data,
 	isLoadingAddProduct,
 	onAddProduct,
-	currentCategory,
 }: IProps) => {
 	return (
 		<Table.ScrollArea borderWidth='1px' borderTop={"none"} maxW='100%'>
@@ -55,7 +53,7 @@ const AdminTable = ({
 						<Table.Row key={item.id}>
 							<Table.Cell>
 								<ProductCell
-									category={item.category || currentCategory}
+									category={item.category}
 									title={item.title}
 									price={item.price}
 									thumbnail={item.thumbnail.url}

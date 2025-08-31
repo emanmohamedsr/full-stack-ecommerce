@@ -168,41 +168,33 @@ const DrawerForm = ({ product, children, onSubmit }: Iprops) => {
 
 										<Field.Root
 											disabled={isLoadingCategories}
-											_disabled={{
-												backgroundColor: "gray.200",
-											}}>
-											<Field.Root
-												disabled={isLoadingCategories}
-												_disabled={{ backgroundColor: "gray.200" }}>
-												<Field.Label>
-													{isLoadingCategories && <Spinner size='sm' />}
-													{isLoadingCategories ? "loading..." : "Category"}
-												</Field.Label>
+											_disabled={{ backgroundColor: "gray.200" }}>
+											<Field.Label>
+												{isLoadingCategories && <Spinner size='sm' />}
+												{isLoadingCategories ? "loading..." : "Category"}
+											</Field.Label>
 
-												<NativeSelect.Root>
-													<NativeSelect.Field {...register("category")}>
-														<For each={[...(categories?.data ?? [])]}>
-															{(cat: ICategory) => (
-																<option key={cat.id} value={cat.title}>
-																	{toCapitalize(cat.title)}
-																</option>
-															)}
-														</For>
-													</NativeSelect.Field>
-													<NativeSelect.Indicator />
-												</NativeSelect.Root>
-												{errors.category && (
-													<Field.HelperText
-														maxW={"300px"}
-														color={
-															colorMode === "light" ? "red.600" : "red.300"
-														}
-														fontSize={"sm"}>
-														<Field.ErrorIcon w={4} mr={2} />
-														{errors.category.message}
-													</Field.HelperText>
-												)}
-											</Field.Root>
+											<NativeSelect.Root>
+												<NativeSelect.Field {...register("category")}>
+													<For each={[...(categories?.data ?? [])]}>
+														{(cat: ICategory) => (
+															<option key={cat.id} value={cat.title}>
+																{toCapitalize(cat.title)}
+															</option>
+														)}
+													</For>
+												</NativeSelect.Field>
+												<NativeSelect.Indicator />
+											</NativeSelect.Root>
+											{errors.category && (
+												<Field.HelperText
+													maxW={"300px"}
+													color={colorMode === "light" ? "red.600" : "red.300"}
+													fontSize={"sm"}>
+													<Field.ErrorIcon w={4} mr={2} />
+													{errors.category.message}
+												</Field.HelperText>
+											)}
 										</Field.Root>
 									</Fieldset.Content>
 								</Drawer.Body>

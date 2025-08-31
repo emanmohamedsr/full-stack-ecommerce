@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import cookieService from "@/services/Cookie";
 import {
+	useLazyGetCategoryProductsQuery,
 	useLazyGetProductsQuery,
 	usePostProductMutation,
 } from "@/app/services/productsApi";
-import { useLazyGetOneCategoryQuery } from "@/app/services/categoriesApi";
-import type { ICategory, IProduct } from "@/interfaces/Product";
+import type { IProduct } from "@/interfaces/Product";
 import type { IError } from "@/interfaces/Error";
 import { toaster } from "@/config/toaster";
 import EmptyProductsState from "@/components/EmptyProductsState";
@@ -20,16 +20,19 @@ import type { IFormInputs } from "@/interfaces/FormInputs";
 import LoadingOverlay from "@/components/loading";
 import AdminTableSkeleton from "@/components/AdminTableSkeleton";
 import AdminTable from "@/components/AdminTable";
+import type { IMeta } from "@/interfaces/meta";
+import { Box, Flex } from "@chakra-ui/react";
+import Paginator from "@/components/ui/Paginator";
 const AdminDashboardPage = () => {
-	const [data, setData] = useState<Array<IProduct>>();
-	const [currentCategory, setCurrentCategory] = useState<ICategory | null>(
-		null,
-	);
+	const [page, setPage] = useState<number>(1);
+	const [data, setData] = useState<IProduct[]>([]);
+	const [meta, setMeta] = useState<IMeta>();
 
 	const [triggerGetProducts, { isLoading: isLoadingProducts }] =
 		useLazyGetProductsQuery();
 	const [triggerGetCategoryProducts, { isLoading: isLoadingCategoryProducts }] =
-		useLazyGetOneCategoryQuery();
+		useLazyGetCategoryProductsQuery();
+
 	const { token, user } = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
 	const [triggerGetMe, { isLoading: isLoadingAdmin, isError, error }] =
@@ -99,9 +102,10 @@ const AdminDashboardPage = () => {
 
 		const getAllProducts = async () => {
 			try {
-				const res = await triggerGetProducts({}).unwrap();
+				const res = await triggerGetProducts({ page }).unwrap();
 				if (res) {
 					setData(res.data);
+					setMeta(res.meta);
 				}
 			} catch (error) {
 				const errorObj = error as IError;
@@ -114,12 +118,13 @@ const AdminDashboardPage = () => {
 		};
 		const getOneCategoryProducts = async () => {
 			try {
-				const res = await triggerGetCategoryProducts(
-					selectedCategory?.documentId,
-				).unwrap();
+				const res = await triggerGetCategoryProducts({
+					categoryId: selectedCategory!.documentId,
+					page,
+				}).unwrap();
 				if (res) {
-					setData(res.data.products);
-					setCurrentCategory(res.data);
+					setData(res.data);
+					setMeta(res.meta);
 				}
 			} catch (error) {
 				const errorObj = error as IError;
@@ -147,6 +152,7 @@ const AdminDashboardPage = () => {
 		triggerGetProducts,
 		triggerGetCategoryProducts,
 		selectedCategory,
+		page,
 	]);
 
 	if (isCheckingAuth || isLoadingAdmin) {
@@ -165,13 +171,25 @@ const AdminDashboardPage = () => {
 			return <AdminTableSkeleton />;
 		if (data && data.length > 0)
 			return (
-				<AdminTable
-					data={data}
-					currentCategory={currentCategory}
-					isLoadingAddProduct={isLoadingPostProduct}
-					adminName={user?.username}
-					onAddProduct={handleAddProduct}
-				/>
+				<Box w='100%'>
+					<AdminTable
+						data={data}
+						isLoadingAddProduct={isLoadingPostProduct}
+						adminName={user?.username}
+						onAddProduct={handleAddProduct}
+					/>
+					{meta && (
+						<Flex justifyContent='center' mt={4} mb={4}>
+							<Paginator
+								currentPage={page}
+								total={meta.pagination.total}
+								pageCount={meta.pagination.pageCount}
+								pageSize={meta.pagination.pageSize}
+								onPageChange={setPage}
+							/>
+						</Flex>
+					)}
+				</Box>
 			);
 		if (data && data?.length <= 0)
 			return (

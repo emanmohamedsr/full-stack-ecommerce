@@ -7,14 +7,7 @@ export const categoriesApi = createApi({
 		getCategories: builder.query({
 			query: () => `categories`,
 		}),
-		getOneCategory: builder.query({
-			query: (id) => `categories/${id}?populate[products][populate]=thumbnail`,
-		}),
 	}),
 });
 
-export const {
-	useGetCategoriesQuery,
-	useGetOneCategoryQuery,
-	useLazyGetOneCategoryQuery,
-} = categoriesApi;
+export const { useGetCategoriesQuery } = categoriesApi;
