@@ -155,6 +155,10 @@ const AdminDashboardPage = () => {
 		page,
 	]);
 
+	useEffect(() => {
+		setPage(1);
+	}, [selectedCategory]);
+
 	if (isCheckingAuth || isLoadingAdmin) {
 		return (
 			<LoadingOverlay
@@ -179,7 +183,7 @@ const AdminDashboardPage = () => {
 						onAddProduct={handleAddProduct}
 					/>
 					{meta && (
-						<Flex justifyContent='center' mt={4} mb={4}>
+						<Flex justifyContent='center' alignItems='center' pt={4} pb={4}>
 							<Paginator
 								currentPage={page}
 								total={meta.pagination.total}
