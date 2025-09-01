@@ -6,6 +6,7 @@ export const productsApi = createApi({
 	tagTypes: ["Products"],
 	refetchOnReconnect: true,
 	refetchOnMountOrArgChange: true,
+
 	baseQuery: fetchBaseQuery({ baseUrl: `${import.meta.env.VITE_API_URL}/api` }),
 
 	endpoints: (builder) => ({
@@ -20,6 +21,16 @@ export const productsApi = createApi({
 					},
 				};
 			},
+			providesTags: (result) =>
+				result
+					? [
+							...result.data.map(({ id }: { id: string }) => ({
+								type: "Products" as const,
+								id,
+							})),
+							{ type: "Products", id: "LIST" },
+					  ]
+					: [{ type: "Products", id: "LIST" }],
 		}),
 
 		getCategoryProducts: builder.query({
@@ -34,6 +45,16 @@ export const productsApi = createApi({
 					},
 				};
 			},
+			providesTags: (result) =>
+				result
+					? [
+							...result.data.map(({ id }: { id: number }) => ({
+								type: "Products" as const,
+								id,
+							})),
+							{ type: "Products", id: "LIST" },
+					  ]
+					: [{ type: "Products", id: "LIST" }],
 		}),
 
 		getOneProduct: builder.query({
@@ -70,6 +91,7 @@ export const productsApi = createApi({
 				}
 				return response;
 			},
+			invalidatesTags: [{ type: "Products", id: "LIST" }],
 		}),
 
 		putProduct: builder.mutation({
@@ -99,6 +121,7 @@ export const productsApi = createApi({
 				}
 				return response;
 			},
+			invalidatesTags: [{ type: "Products", id: "LIST" }],
 		}),
 
 		deleteProduct: builder.mutation({
@@ -115,15 +138,14 @@ export const productsApi = createApi({
 				}
 				return response;
 			},
+			invalidatesTags: [{ type: "Products", id: "LIST" }],
 		}),
 	}),
 });
 
 export const {
 	useGetProductsQuery,
-	useLazyGetProductsQuery,
 	useGetCategoryProductsQuery,
-	useLazyGetCategoryProductsQuery,
 	useGetOneProductQuery,
 	usePostProductMutation,
 	usePutProductMutation,

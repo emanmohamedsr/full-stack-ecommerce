@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import cookieService from "@/services/Cookie";
 import {
-	useLazyGetCategoryProductsQuery,
-	useLazyGetProductsQuery,
+	useGetCategoryProductsQuery,
+	useGetProductsQuery,
 	usePostProductMutation,
 } from "@/app/services/productsApi";
 import type { IProduct } from "@/interfaces/Product";
@@ -23,15 +23,27 @@ import AdminTable from "@/components/AdminTable";
 import type { IMeta } from "@/interfaces/meta";
 import { Box, Flex } from "@chakra-ui/react";
 import Paginator from "@/components/ui/Paginator";
-const AdminDashboardPage = () => {
-	const [page, setPage] = useState<number>(1);
-	const [data, setData] = useState<IProduct[]>([]);
-	const [meta, setMeta] = useState<IMeta>();
 
-	const [triggerGetProducts, { isLoading: isLoadingProducts }] =
-		useLazyGetProductsQuery();
-	const [triggerGetCategoryProducts, { isLoading: isLoadingCategoryProducts }] =
-		useLazyGetCategoryProductsQuery();
+const AdminDashboardPage = () => {
+	const selectedCategory = useSelector(selectCategory);
+	const [page, setPage] = useState<number>(1);
+
+	const { data: productsData, isLoading: isLoadingProducts } =
+		useGetProductsQuery({ page }, { skip: !!selectedCategory });
+	console.log(productsData);
+	const { data: categoryProductsData, isLoading: isLoadingCategoryProducts } =
+		useGetCategoryProductsQuery(
+			{ categoryId: selectedCategory?.documentId, page },
+			{ skip: !selectedCategory },
+		);
+	console.log(categoryProductsData);
+
+	const data: IProduct[] = selectedCategory
+		? categoryProductsData?.data
+		: productsData?.data;
+	const meta: IMeta = selectedCategory
+		? categoryProductsData?.meta
+		: productsData?.meta;
 
 	const { token, user } = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
@@ -39,7 +51,6 @@ const AdminDashboardPage = () => {
 		useLazyGetMeQuery();
 	const [validAdmin, setValidAdmin] = useState<boolean>(false);
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-	const selectedCategory = useSelector(selectCategory);
 	const [triggerPostProduct, { isLoading: isLoadingPostProduct }] =
 		usePostProductMutation();
 
@@ -99,61 +110,10 @@ const AdminDashboardPage = () => {
 			if (isMounted) setIsCheckingAuth(false);
 		};
 		checkAuth();
-
-		const getAllProducts = async () => {
-			try {
-				const res = await triggerGetProducts({ page }).unwrap();
-				if (res) {
-					setData(res.data);
-					setMeta(res.meta);
-				}
-			} catch (error) {
-				const errorObj = error as IError;
-				toaster.error({
-					title: `${errorObj.data?.error?.status || 500} Error`,
-					description:
-						errorObj.data?.error?.message || "Failed to fetch products",
-				});
-			}
-		};
-		const getOneCategoryProducts = async () => {
-			try {
-				const res = await triggerGetCategoryProducts({
-					categoryId: selectedCategory!.documentId,
-					page,
-				}).unwrap();
-				if (res) {
-					setData(res.data);
-					setMeta(res.meta);
-				}
-			} catch (error) {
-				const errorObj = error as IError;
-				toaster.error({
-					title: `${errorObj.data?.error?.status || 500} Error`,
-					description:
-						errorObj.data?.error?.message || "Failed to fetch products",
-				});
-			}
-		};
-		if (!selectedCategory) {
-			getAllProducts();
-		} else {
-			getOneCategoryProducts();
-		}
-
 		return () => {
 			isMounted = false;
 		};
-	}, [
-		dispatch,
-		token,
-		user,
-		triggerGetMe,
-		triggerGetProducts,
-		triggerGetCategoryProducts,
-		selectedCategory,
-		page,
-	]);
+	}, [dispatch, token, user, triggerGetMe, selectedCategory, page]);
 
 	useEffect(() => {
 		setPage(1);
@@ -173,6 +133,7 @@ const AdminDashboardPage = () => {
 	if (validAdmin) {
 		if (isLoadingProducts || isLoadingCategoryProducts)
 			return <AdminTableSkeleton />;
+
 		if (data && data.length > 0)
 			return (
 				<Box w='100%'>
