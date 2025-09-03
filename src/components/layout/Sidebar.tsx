@@ -125,6 +125,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 			pos='fixed'
 			h='full'
 			overflowY='auto'
+			overflowX='hidden'
 			{...rest}>
 			<Flex h='20' alignItems='center' mx='8' justifyContent='space-between'>
 				<Link to='/'>
@@ -399,13 +400,24 @@ const Sidebar = () => {
 					onClose={() => onClose}
 					display={{ base: "none", md: "block" }}
 				/>
-				<Drawer.Root placement={"start"} open={open} size='full'>
-					<Drawer.Positioner>
-						<Drawer.Content>
-							<SidebarContent onClose={onClose} />
-						</Drawer.Content>
-					</Drawer.Positioner>
-				</Drawer.Root>
+				{open && (
+					<Drawer.Root
+						placement={"start"}
+						open={open}
+						size='full'
+						trapFocus={false}
+						preventScroll={false}
+						onOpenChange={onClose}>
+						<Drawer.Trigger asChild>
+							<Box display='none' />
+						</Drawer.Trigger>
+						<Drawer.Positioner>
+							<Drawer.Content>
+								<SidebarContent onClose={onClose} />
+							</Drawer.Content>
+						</Drawer.Positioner>
+					</Drawer.Root>
+				)}
 				<MobileNav user={user} onOpen={onOpen} />
 				<Box ml={{ base: 0, md: 60 }} p='4'></Box>
 			</Box>

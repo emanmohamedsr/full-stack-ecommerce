@@ -1,0 +1,4 @@
+body[data-scroll-lock] {
+  overflow: auto !important;
+  padding-right: 0 !important;
+}

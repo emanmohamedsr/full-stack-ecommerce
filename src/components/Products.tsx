@@ -33,7 +33,7 @@ const Products = () => {
 		);
 	}
 	return (
-		<VStack>
+		<VStack gap={4} width='full' justifyContent='center'>
 			<HStack flexWrap={"wrap"} justifyContent='center' gap={4} p={4}>
 				{products.map((item: IProduct) => (
 					<ProductCard key={item.id} product={item} />

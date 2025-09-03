@@ -10,7 +10,10 @@ const RootAdminLayout = () => {
 				pos={"absolute"}
 				top={"64px"}
 				left={{ base: 0, md: 60 }}
-				w={{ base: "full", md: "calc(100% - 240px)" }}>
+				w={{ base: "full", md: "calc(100% - 240px)" }}
+				overflowY='auto'
+				overflowX='hidden'
+				minH='calc(100vh - 64px)'>
 				<Outlet />
 			</Box>
 		</Box>

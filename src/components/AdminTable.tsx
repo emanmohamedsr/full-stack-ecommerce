@@ -1,43 +1,20 @@
-import { Button, HStack, Spinner, Table, Text } from "@chakra-ui/react";
-import DrawerForm from "./DrawerForm";
+import { Table } from "@chakra-ui/react";
 import ActionsCell from "./ActionsCell";
 import ProductCell from "./ProductCell";
 import type { IProduct } from "@/interfaces/Product";
-import type { IFormInputs } from "@/interfaces/FormInputs";
 
 interface IProps {
-	adminName?: string;
 	data: Array<IProduct>;
-	isLoadingAddProduct: boolean;
-	onAddProduct: (data: IFormInputs) => Promise<void>;
 }
 
-const AdminTable = ({
-	adminName = "Admin",
-	data,
-	isLoadingAddProduct,
-	onAddProduct,
-}: IProps) => {
+const AdminTable = ({ data }: IProps) => {
 	return (
-		<Table.ScrollArea borderWidth='1px' borderTop={"none"} maxW='100%'>
+		<Table.ScrollArea
+			borderWidth='1px'
+			borderTop={"none"}
+			maxW='100%'
+			minH='400px'>
 			<Table.Root size='sm' variant='line' striped>
-				<Table.Caption captionSide='top'>
-					<HStack justifyContent='space-between' w='full' p={4}>
-						<DrawerForm onSubmit={onAddProduct}>
-							<Button
-								disabled={isLoadingAddProduct}
-								_disabled={{ bg: "gray.500", cursor: "not-allowed" }}
-								bg='teal.700'
-								color='white'>
-								{isLoadingAddProduct && <Spinner size='sm' />}
-								{isLoadingAddProduct ? "Adding..." : "Add Product"}
-							</Button>
-						</DrawerForm>
-						<Text fontSize='lg'>
-							Welcome back, <strong>{adminName}</strong>
-						</Text>
-					</HStack>
-				</Table.Caption>
 				<Table.Header>
 					<Table.Row>
 						<Table.ColumnHeader textAlign={"center"} minW='300px'>

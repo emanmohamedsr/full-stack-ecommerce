@@ -65,21 +65,11 @@ export const productsApi = createApi({
 		}),
 
 		postProduct: builder.mutation({
-			query: (product) => {
-				const requestData = {
-					data: {
-						title: product.title,
-						description: product.description,
-						price: product.price,
-						stock: product.stock,
-						thumbnail: product.thumbnail,
-						category: product.category,
-					},
-				};
+			query: (productData) => {
 				return {
 					url: `products`,
 					method: `POST`,
-					body: requestData,
+					body: productData,
 					headers: {
 						Authorization: `Bearer ${CookiesService.get("ma7al_jwt")}`,
 					},
@@ -90,26 +80,28 @@ export const productsApi = createApi({
 					CookiesService.remove("ma7al_jwt");
 				}
 				return response;
+			},
+			async onQueryStarted({ ...patch }, { dispatch, queryFulfilled }) {
+				const patchResult = dispatch(
+					productsApi.util.updateQueryData("getProducts", "LIST", (draft) => {
+						Object.assign(draft, patch);
+					}),
+				);
+				try {
+					await queryFulfilled;
+				} catch {
+					patchResult.undo();
+				}
 			},
 			invalidatesTags: [{ type: "Products", id: "LIST" }],
 		}),
 
 		putProduct: builder.mutation({
-			query: (product) => {
-				const requestData = {
-					data: {
-						title: product.title,
-						description: product.description,
-						price: product.price,
-						stock: product.stock,
-						// thumbnail: product.thumbnail,
-						// category: product.category,
-					},
-				};
+			query: ({ productDocumentId, productData }) => {
 				return {
-					url: `products/${product.documentId}`,
+					url: `products/${productDocumentId}`,
 					method: `PUT`,
-					body: requestData,
+					body: productData,
 					headers: {
 						Authorization: `Bearer ${CookiesService.get("ma7al_jwt")}`,
 					},
@@ -121,7 +113,45 @@ export const productsApi = createApi({
 				}
 				return response;
 			},
+			async onQueryStarted(
+				{ productDocumentId, ...patch },
+				{ dispatch, queryFulfilled },
+			) {
+				const patchResult = dispatch(
+					productsApi.util.updateQueryData(
+						"getProducts",
+						productDocumentId,
+						(draft) => {
+							Object.assign(draft, patch);
+						},
+					),
+				);
+				try {
+					await queryFulfilled;
+				} catch {
+					patchResult.undo();
+				}
+			},
 			invalidatesTags: [{ type: "Products", id: "LIST" }],
+		}),
+
+		uploadProductThumbnailFile: builder.mutation({
+			query: (formData) => {
+				return {
+					url: `upload`,
+					method: `POST`,
+					body: formData,
+					headers: {
+						Authorization: `Bearer ${CookiesService.get("ma7al_jwt")}`,
+					},
+				};
+			},
+			transformErrorResponse: (response) => {
+				if (response.status === 401) {
+					CookiesService.remove("ma7al_jwt");
+				}
+				return response;
+			},
 		}),
 
 		deleteProduct: builder.mutation({
@@ -145,6 +175,7 @@ export const productsApi = createApi({
 
 export const {
 	useGetProductsQuery,
+	useUploadProductThumbnailFileMutation,
 	useGetCategoryProductsQuery,
 	useGetOneProductQuery,
 	usePostProductMutation,

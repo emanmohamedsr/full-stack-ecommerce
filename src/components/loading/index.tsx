@@ -1,7 +1,6 @@
 "use client";
 
-import { Drawer, Portal, Spinner, Text, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Drawer, Portal, Spinner, Text, VStack } from "@chakra-ui/react";
 
 interface IProps {
 	description: string;
@@ -9,20 +8,23 @@ interface IProps {
 }
 
 const LoadingOverlay = ({ description, isOpen }: IProps) => {
-	const [open] = useState(isOpen || false);
+	if (!isOpen) return null;
 
 	return (
-		<Drawer.Root placement='top' size={"full"} open={open}>
+		<Drawer.Root placement='top' size='full' open={true}>
+			<Drawer.Trigger asChild>
+				<Box display='none' />
+			</Drawer.Trigger>
 			<Portal>
 				<Drawer.Backdrop />
 				<Drawer.Positioner>
-					<Drawer.Content bg={"teal.700"} color={"white"}>
+					<Drawer.Content bg='teal.700' color='white'>
 						<Drawer.Header>
 							<Drawer.Title>LOADING</Drawer.Title>
 						</Drawer.Header>
 						<Drawer.Body>
 							<VStack
-								fontSize={"xl"}
+								fontSize='xl'
 								spaceY={4}
 								justifyContent='center'
 								align='center'
@@ -37,4 +39,5 @@ const LoadingOverlay = ({ description, isOpen }: IProps) => {
 		</Drawer.Root>
 	);
 };
+
 export default LoadingOverlay;

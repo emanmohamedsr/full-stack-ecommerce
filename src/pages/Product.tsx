@@ -51,18 +51,17 @@ const ProductPage = () => {
 				Go Back
 			</Button>
 			<Card.Root
-				flexDirection='column'
+				flexDirection={{ base: "column", md: "row" }}
 				overflow='hidden'
-				w='full'
-				md={{ flexDirection: "row" }}>
+				w='full'>
 				<Image
 					objectFit='cover'
-					maxWidth={"250px"}
+					w={"250px"}
 					mx='auto'
 					src={thumbnailUrl}
 					alt={title}
 				/>
-				<Box>
+				<Box flex='1'>
 					<Card.Body>
 						<Card.Title mb='2'>{title}</Card.Title>
 						<Card.Description>{description}</Card.Description>

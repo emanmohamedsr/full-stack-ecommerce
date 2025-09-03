@@ -8,35 +8,31 @@ import cookieService from "@/services/Cookie";
 import {
 	useGetCategoryProductsQuery,
 	useGetProductsQuery,
-	usePostProductMutation,
 } from "@/app/services/productsApi";
 import type { IProduct } from "@/interfaces/Product";
-import type { IError } from "@/interfaces/Error";
-import { toaster } from "@/config/toaster";
 import EmptyProductsState from "@/components/EmptyProductsState";
 import { VscEmptyWindow } from "react-icons/vsc";
 import { selectCategory } from "@/app/features/categorySlice";
-import type { IFormInputs } from "@/interfaces/FormInputs";
 import LoadingOverlay from "@/components/loading";
 import AdminTableSkeleton from "@/components/AdminTableSkeleton";
 import AdminTable from "@/components/AdminTable";
 import type { IMeta } from "@/interfaces/meta";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Text } from "@chakra-ui/react";
 import Paginator from "@/components/ui/Paginator";
+import AddProductForm from "@/components/AddProductForm";
 
 const AdminDashboardPage = () => {
+	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 	const selectedCategory = useSelector(selectCategory);
 	const [page, setPage] = useState<number>(1);
 
 	const { data: productsData, isLoading: isLoadingProducts } =
 		useGetProductsQuery({ page }, { skip: !!selectedCategory });
-	console.log(productsData);
 	const { data: categoryProductsData, isLoading: isLoadingCategoryProducts } =
 		useGetCategoryProductsQuery(
 			{ categoryId: selectedCategory?.documentId, page },
 			{ skip: !selectedCategory },
 		);
-	console.log(categoryProductsData);
 
 	const data: IProduct[] = selectedCategory
 		? categoryProductsData?.data
@@ -51,27 +47,6 @@ const AdminDashboardPage = () => {
 		useLazyGetMeQuery();
 	const [validAdmin, setValidAdmin] = useState<boolean>(false);
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-	const [triggerPostProduct, { isLoading: isLoadingPostProduct }] =
-		usePostProductMutation();
-
-	const handleAddProduct = async (data: IFormInputs) => {
-		try {
-			await triggerPostProduct({
-				...data,
-			}).unwrap();
-			toaster.success({
-				title: "Success",
-				description: "Product added successfully",
-			});
-		} catch (error) {
-			const errorObj = error as IError;
-			toaster.error({
-				title: `${errorObj.data?.error?.status || 500} Error`,
-				description: errorObj.data?.error?.message || "Failed to add product",
-			});
-		}
-	};
-
 	useEffect(() => {
 		let isMounted = true;
 
@@ -134,36 +109,48 @@ const AdminDashboardPage = () => {
 		if (isLoadingProducts || isLoadingCategoryProducts)
 			return <AdminTableSkeleton />;
 
-		if (data && data.length > 0)
-			return (
-				<Box w='100%'>
-					<AdminTable
-						data={data}
-						isLoadingAddProduct={isLoadingPostProduct}
-						adminName={user?.username}
-						onAddProduct={handleAddProduct}
+		return (
+			<Box>
+				<HStack justifyContent='space-between' w='full' p={4}>
+					<Button
+						onClick={() => setIsAddDialogOpen(true)}
+						_disabled={{ bg: "gray.500", cursor: "not-allowed" }}
+						bg='teal.700'
+						color='white'>
+						Create Product
+					</Button>
+					<AddProductForm
+						onClose={() => setIsAddDialogOpen(false)}
+						open={isAddDialogOpen}
 					/>
-					{meta && (
-						<Flex justifyContent='center' alignItems='center' pt={4} pb={4}>
-							<Paginator
-								currentPage={page}
-								total={meta.pagination.total}
-								pageCount={meta.pagination.pageCount}
-								pageSize={meta.pagination.pageSize}
-								onPageChange={setPage}
-							/>
-						</Flex>
-					)}
-				</Box>
-			);
-		if (data && data?.length <= 0)
-			return (
-				<EmptyProductsState
-					title='No products found'
-					description='Try adjusting your filters or adding new products.'>
-					<VscEmptyWindow />
-				</EmptyProductsState>
-			);
+					<Text fontSize='lg'>
+						Welcome back, <strong>{user?.username}</strong>
+					</Text>
+				</HStack>
+				{data && data.length > 0 ? (
+					<Box w='100%' h='full'>
+						<AdminTable data={data} />
+						{meta && (
+							<Flex justifyContent='center' alignItems='center' pt={4} pb={4}>
+								<Paginator
+									currentPage={page}
+									total={meta.pagination.total}
+									pageCount={meta.pagination.pageCount}
+									pageSize={meta.pagination.pageSize}
+									onPageChange={setPage}
+								/>
+							</Flex>
+						)}
+					</Box>
+				) : (
+					<EmptyProductsState
+						title='No products found'
+						description='Try adjusting your filters or adding new products.'>
+						<VscEmptyWindow />
+					</EmptyProductsState>
+				)}
+			</Box>
+		);
 	}
 	return null;
 };

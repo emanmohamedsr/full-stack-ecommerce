@@ -37,10 +37,33 @@ export const SignupSchema = yup.object({
 		.required("Password is required"),
 });
 
-export const ProductSchema = yup.object({
+export const addProductSchema = yup.object({
 	title: yup.string().required("Title is required"),
 	description: yup.string().required("Description is required"),
-	thumbnail: yup.string().required("Thumbnail is required"),
+	thumbnail: yup
+		.mixed<File>()
+		.required("Thumbnail is required")
+		.test("file", "Invalid file type", (value) => {
+			if (!value) return true;
+			if (value instanceof File) {
+				return ["image/jpeg", "image/png", "image/jpg"].includes(value.type);
+			}
+			return false;
+		}),
+	price: yup
+		.number()
+		.min(0, "Price must be positive")
+		.required("Price is required"),
+	stock: yup
+		.number()
+		.min(0, "Stock must be positive")
+		.required("Stock is required"),
+	category: yup.string().required("Category is required"),
+});
+
+export const editProductSchema = yup.object({
+	title: yup.string().required("Title is required"),
+	description: yup.string().required("Description is required"),
 	price: yup
 		.number()
 		.min(0, "Price must be positive")

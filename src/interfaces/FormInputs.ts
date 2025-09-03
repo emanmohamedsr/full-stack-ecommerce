@@ -3,10 +3,14 @@ import type { ICategory } from "./Product";
 export interface IFormInputs {
 	title: string;
 	description: string;
-	thumbnail: string;
+	thumbnail: File;
 	price: number;
 	stock: number;
 	category: string;
+}
+
+export interface IHandledFormInputs extends Omit<IFormInputs, "category"> {
+	category: number | null;
 }
 
 export interface IDataPayLoad
