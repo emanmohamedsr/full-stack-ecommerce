@@ -1,5 +1,4 @@
 import type { RootState } from "@/app/store";
-import { useColorMode } from "@/hooks/useColorMode";
 import { useLazyGetMeQuery } from "@/app/services/UserApi";
 import { Image, Stack, DataList, Button, Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -13,7 +12,6 @@ import EmptyProductsState from "@/components/EmptyProductsState";
 import { ImProfile } from "react-icons/im";
 const ProfilePage = () => {
 	const isOnline = useSelector(selectNetworkStatus);
-	const { colorMode } = useColorMode();
 
 	const { token, user } = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
@@ -115,15 +113,15 @@ const ProfilePage = () => {
 				spaceY={6}>
 				<Stack
 					w={"100%"}
-					direction={{ base: "column-reverse", md: "row" }}
+					direction={{ base: "column", md: "row" }}
 					gap={4}
 					justifyContent='center'
 					alignItems={"center"}>
 					<Box
 						w={{ base: "100%", md: "200px" }}
-						borderWidth='2px'
-						borderColor={colorMode === "dark" ? "gray.800" : "gray.200"}
-						borderStyle='solid'
+						borderWidth={"1px"}
+						borderColor={"teal.700"}
+						borderStyle={"solid"}
 						borderRadius={{ base: "md", md: "full" }}>
 						<Image
 							src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${validUser.username}`}
@@ -132,7 +130,12 @@ const ProfilePage = () => {
 							mx={"auto"}
 						/>
 					</Box>
-					<DataList.Root orientation='horizontal'>
+					<DataList.Root
+						w={"250px"}
+						orientation={"vertical"}
+						alignItems={"start"}
+						justifySelf={"start"}
+						alignSelf={{ base: "start", md: "center" }}>
 						{stats.map((item) => (
 							<DataList.Item key={item.label}>
 								<DataList.ItemLabel>{item.label}</DataList.ItemLabel>
@@ -143,8 +146,24 @@ const ProfilePage = () => {
 				</Stack>
 				<Stack w={"100%"} direction='column' gap={6}>
 					<Stack direction={"column"} flexWrap='wrap' gap={4} align='start'>
-						<Button w={"100%"}>Reset Password</Button>
-						<Button w={"100%"} variant={"solid"} bg={"red.700"} color={"white"}>
+						<Button
+							w={"100%"}
+							variant={"outline"}
+							bg={"teal.200"}
+							borderWidth={"1px"}
+							borderColor={"teal.700"}
+							borderStyle={"solid"}
+							color={"teal.700"}>
+							Reset Password
+						</Button>
+						<Button
+							w={"100%"}
+							variant={"outline"}
+							bg={"red.200"}
+							borderWidth={"1px"}
+							borderColor={"red.700"}
+							borderStyle={"solid"}
+							color={"red.700"}>
 							Delete Account
 						</Button>
 					</Stack>

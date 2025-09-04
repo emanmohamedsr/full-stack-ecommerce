@@ -66,6 +66,7 @@ const AddProductForm = ({ open, onClose }: Iprops) => {
 				description: "Product added successfully",
 			});
 			onClose();
+			reset();
 		} catch (error) {
 			const errorObj = error as IError;
 			toaster.error({

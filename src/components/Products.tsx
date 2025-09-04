@@ -14,7 +14,7 @@ import { VscEmptyWindow } from "react-icons/vsc";
 
 const Products = () => {
 	const isOnline = useSelector(selectNetworkStatus);
-	const [page, setPage] = useState(2);
+	const [page, setPage] = useState(1);
 	const { isError, error, isLoading, data } = useGetProductsQuery({ page });
 	const products = data?.data || [];
 	const meta: IMeta | undefined = data?.meta;

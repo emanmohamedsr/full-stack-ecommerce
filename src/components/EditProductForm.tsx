@@ -107,6 +107,7 @@ const EditProductForm = ({ open, onClose, product }: Iprops) => {
 				description: "Product updated successfully",
 			});
 			onClose();
+			reset();
 		} catch (error) {
 			const errorObj = error as IError;
 			toaster.error({

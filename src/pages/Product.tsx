@@ -26,6 +26,7 @@ import {
 import { addProductToCart } from "@/utils";
 import { selectNetworkStatus } from "@/app/features/networkSlice";
 import EmptyProductsState from "@/components/EmptyProductsState";
+import type { IProduct } from "@/interfaces/Product";
 const ProductPage = () => {
 	const isOnline = useSelector(selectNetworkStatus);
 	const productsCartState = useSelector(selectCartProducts);
@@ -38,10 +39,10 @@ const ProductPage = () => {
 		error,
 		data: product,
 	} = useGetOneProductQuery(id!);
-	const { title, description, thumbnail, category, price, stock } =
+	const { title, description, thumbnail, category, price, stock }: IProduct =
 		product || {};
-	const thumbnailUrl = thumbnail?.url
-		? `${import.meta.env.VITE_API_URL}${thumbnail.url}`
+	const thumbnailUrl = thumbnail?.formats?.thumbnail?.url
+		? `${thumbnail.formats.thumbnail.url}`
 		: Product;
 	if (!isOnline) {
 		return (

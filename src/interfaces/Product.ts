@@ -3,14 +3,17 @@ export interface ICategory {
 	documentId: string;
 	title: string;
 }
+
+export interface IThumbnail {
+	url: string;
+}
+
 export interface IProduct {
 	documentId: string;
 	id: number;
 	title: string;
 	description: string;
-	thumbnail: {
-		url: string;
-	};
+	thumbnail: IThumbnail;
 	stock: number;
 	price: number;
 	category: ICategory;

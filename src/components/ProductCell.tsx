@@ -10,6 +10,8 @@ import {
 	Text,
 } from "@chakra-ui/react";
 
+import Product from "../assets/product.svg";
+
 interface Iprops {
 	category: ICategory;
 	title: string;
@@ -18,6 +20,8 @@ interface Iprops {
 }
 
 const ProductCell = ({ category, title, price, thumbnail }: Iprops) => {
+	const thumbnailUrl = thumbnail ? thumbnail : Product;
+
 	const { colorMode } = useColorMode();
 	return (
 		<Center py={12}>
@@ -44,7 +48,7 @@ const ProductCell = ({ category, title, price, thumbnail }: Iprops) => {
 						pos: "absolute",
 						top: 5,
 						left: 0,
-						backgroundImage: `url(${import.meta.env.VITE_API_URL}${thumbnail})`,
+						backgroundImage: `url(${thumbnailUrl})`,
 						filter: "blur(15px)",
 						zIndex: -1,
 					}}
@@ -58,7 +62,7 @@ const ProductCell = ({ category, title, price, thumbnail }: Iprops) => {
 						height={"180px"}
 						width={282}
 						objectFit={"cover"}
-						src={`${import.meta.env.VITE_API_URL}${thumbnail}`}
+						src={`${thumbnailUrl}`}
 						alt='#'
 					/>
 				</Box>

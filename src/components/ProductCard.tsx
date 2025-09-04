@@ -1,4 +1,12 @@
-import { Badge, Button, Card, HStack, Image, Text } from "@chakra-ui/react";
+import {
+	Badge,
+	Box,
+	Button,
+	Card,
+	HStack,
+	Image,
+	Text,
+} from "@chakra-ui/react";
 import Product from "../assets/product.svg";
 import { useNavigate } from "react-router-dom";
 import type { IProduct } from "@/interfaces/Product";
@@ -7,7 +15,7 @@ import {
 	handleCartProducts,
 	selectCartProducts,
 } from "@/app/features/cartSlice";
-import { addProductToCart } from "@/utils";
+import { addProductToCart, textSlice } from "@/utils";
 
 interface IProps {
 	product: IProduct;
@@ -19,22 +27,22 @@ const ProductCard = ({ product }: IProps) => {
 	const dispatch = useDispatch();
 	const productsCartState = useSelector(selectCartProducts);
 	const navigate = useNavigate();
-	const thumbnailUrl = thumbnail?.url
-		? `${import.meta.env.VITE_API_URL}${thumbnail.url}`
-		: Product;
+	const thumbnailUrl = thumbnail?.url ? `${thumbnail.url}` : Product;
 	return (
-		<Card.Root width='250px' md={{ width: "320px" }}>
+		<Card.Root width='250px' height='550px' md={{ width: "320px" }}>
 			<Card.Body gap='2'>
-				<Image
-					borderRadius='md'
-					src={thumbnailUrl}
-					alt={title}
-					boxSize='200px'
-					md={{ boxSize: "250px" }}
-					mx='auto'
-				/>
+				<Box boxSize={{ base: "200px", md: "250px" }}>
+					<Image
+						borderRadius='md'
+						src={thumbnailUrl}
+						alt={title}
+						maxW={"100%"}
+						mx='auto'
+						objectFit='cover'
+					/>
+				</Box>
 				<Card.Title mt='2'>{title}</Card.Title>
-				<Card.Description>{description}</Card.Description>
+				<Card.Description>{textSlice(description, 100)}</Card.Description>
 				<Badge colorPalette={"teal"} mt='2' fontSize={"sm"} width='fit-content'>
 					{category.title}
 				</Badge>

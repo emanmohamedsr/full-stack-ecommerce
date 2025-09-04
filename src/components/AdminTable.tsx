@@ -33,7 +33,7 @@ const AdminTable = ({ data }: IProps) => {
 									category={item.category}
 									title={item.title}
 									price={item.price}
-									thumbnail={item.thumbnail.url}
+									thumbnail={item.thumbnail?.url}
 								/>
 							</Table.Cell>
 							<Table.Cell>

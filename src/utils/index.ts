@@ -69,3 +69,8 @@ export const handleIncreaseProductCartQuantity = (
 export const toCapitalize = (word: string) => {
 	return word[0].toUpperCase() + word.slice(1);
 };
+
+export const textSlice = (text: string, length: number) => {
+	if (text.length <= length) return text;
+	return text.slice(0, length) + "...";
+};
