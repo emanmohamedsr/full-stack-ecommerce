@@ -5,11 +5,14 @@ import App from "./App.tsx";
 import { Provider } from "./components/ui/provider.tsx";
 import { Provider as ReducxProvider } from "react-redux";
 import { store } from "./app/store.ts";
+import NetworkProvider from "./providers/NetworkProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
 	<ReducxProvider store={store}>
-		<Provider>
-			<App />
-		</Provider>
+		<NetworkProvider>
+			<Provider>
+				<App />
+			</Provider>
+		</NetworkProvider>
 	</ReducxProvider>,
 );

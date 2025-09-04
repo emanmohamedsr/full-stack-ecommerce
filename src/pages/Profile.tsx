@@ -8,8 +8,11 @@ import cookieService from "@/services/Cookie";
 import type { IUser } from "@/interfaces/User";
 import { clearSession, setUserSession } from "@/app/features/authSlice";
 import LoadingOverlay from "@/components/loading";
-
+import { selectNetworkStatus } from "@/app/features/networkSlice";
+import EmptyProductsState from "@/components/EmptyProductsState";
+import { ImProfile } from "react-icons/im";
 const ProfilePage = () => {
+	const isOnline = useSelector(selectNetworkStatus);
 	const { colorMode } = useColorMode();
 
 	const { token, user } = useSelector((state: RootState) => state.auth);
@@ -66,6 +69,15 @@ const ProfilePage = () => {
 			isMounted = false;
 		};
 	}, [dispatch, token, user, triggerGetMe]);
+	if (!isOnline) {
+		return (
+			<EmptyProductsState
+				title='No Internet Connection'
+				description='Please check your internet connection and try again.'>
+				<ImProfile />
+			</EmptyProductsState>
+		);
+	}
 	if (isCheckingAuth || isLoading) {
 		return (
 			<LoadingOverlay

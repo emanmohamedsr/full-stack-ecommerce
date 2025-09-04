@@ -3,9 +3,23 @@ import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import cookieService from "@/services/Cookie";
 import { toaster } from "@/config/toaster";
+import { selectNetworkStatus } from "@/app/features/networkSlice";
+import { useSelector } from "react-redux";
+import EmptyProductsState from "@/components/EmptyProductsState";
+import { ImProfile } from "react-icons/im";
 const LogoutPage = () => {
+	const isOnline = useSelector(selectNetworkStatus);
 	const navigate = useNavigate();
 	const { colorMode } = useColorMode();
+	if (!isOnline) {
+		return (
+			<EmptyProductsState
+				title='No Internet Connection'
+				description='Please check your internet connection and try again.'>
+				<ImProfile />
+			</EmptyProductsState>
+		);
+	}
 	return (
 		<Flex
 			minH={"calc(100vh - 64px)"}

@@ -14,14 +14,20 @@ import Product from "../assets/product.svg";
 import { useGetOneProductQuery } from "@/app/services/productsApi";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductPageSkeleton from "@/components/ProductPageSkeleton";
-import { MdOutlineArrowBackIosNew } from "react-icons/md";
+import {
+	MdOutlineArrowBackIosNew,
+	MdOutlineSignalWifiConnectedNoInternet4,
+} from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	handleCartProducts,
 	selectCartProducts,
 } from "@/app/features/cartSlice";
 import { addProductToCart } from "@/utils";
+import { selectNetworkStatus } from "@/app/features/networkSlice";
+import EmptyProductsState from "@/components/EmptyProductsState";
 const ProductPage = () => {
+	const isOnline = useSelector(selectNetworkStatus);
 	const productsCartState = useSelector(selectCartProducts);
 	const dispatch = useDispatch();
 	const { id } = useParams<{ id: string }>();
@@ -37,7 +43,15 @@ const ProductPage = () => {
 	const thumbnailUrl = thumbnail?.url
 		? `${import.meta.env.VITE_API_URL}${thumbnail.url}`
 		: Product;
-
+	if (!isOnline) {
+		return (
+			<EmptyProductsState
+				title='No Internet Connection'
+				description='Please check your network settings and try again.'>
+				<MdOutlineSignalWifiConnectedNoInternet4 />
+			</EmptyProductsState>
+		);
+	}
 	if (isLoading) {
 		return <ProductPageSkeleton />;
 	}

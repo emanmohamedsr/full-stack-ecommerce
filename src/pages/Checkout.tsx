@@ -6,10 +6,14 @@ import { Box, Heading, HStack, Progress, Text } from "@chakra-ui/react";
 import type { ICheckoutData } from "@/interfaces/FormInputs";
 import LocationForm from "@/components/LocationForm";
 import PaymentForm from "@/components/PaymentForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "@/app/features/cartSlice";
+import { selectNetworkStatus } from "@/app/features/networkSlice";
+import EmptyProductsState from "@/components/EmptyProductsState";
+import { FaWpforms } from "react-icons/fa6";
 
 const CheckoutPage = () => {
+	const isOnline = useSelector(selectNetworkStatus);
 	const [, setData] = useState<ICheckoutData>({});
 	const [step, setStep] = useState(1);
 	const [progress, setProgress] = useState(50);
@@ -20,6 +24,15 @@ const CheckoutPage = () => {
 			dispatch(clearCart());
 		}
 	}, [dispatch, completed]);
+	if (!isOnline) {
+		return (
+			<EmptyProductsState
+				title='No Internet Connection'
+				description='Please check your internet connection and try again.'>
+				<FaWpforms />
+			</EmptyProductsState>
+		);
+	}
 	return (
 		<HStack
 			minH='calc(100vh - 64px)'

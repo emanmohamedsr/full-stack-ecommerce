@@ -20,8 +20,11 @@ import type { IMeta } from "@/interfaces/meta";
 import { Box, Button, Flex, HStack, Text } from "@chakra-ui/react";
 import Paginator from "@/components/ui/Paginator";
 import AddProductForm from "@/components/AddProductForm";
+import { selectNetworkStatus } from "@/app/features/networkSlice";
+import { MdOutlineSignalWifiConnectedNoInternet4 } from "react-icons/md";
 
 const AdminDashboardPage = () => {
+	const isOnline = useSelector(selectNetworkStatus);
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 	const selectedCategory = useSelector(selectCategory);
 	const [page, setPage] = useState<number>(1);
@@ -106,9 +109,17 @@ const AdminDashboardPage = () => {
 		throw error;
 	}
 	if (validAdmin) {
+		if (!isOnline) {
+			return (
+				<EmptyProductsState
+					title='No Internet Connection'
+					description='Please check your network settings and try again.'>
+					<MdOutlineSignalWifiConnectedNoInternet4 />
+				</EmptyProductsState>
+			);
+		}
 		if (isLoadingProducts || isLoadingCategoryProducts)
 			return <AdminTableSkeleton />;
-
 		return (
 			<Box>
 				<HStack justifyContent='space-between' w='full' p={4}>

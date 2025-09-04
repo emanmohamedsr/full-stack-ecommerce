@@ -6,8 +6,11 @@ import authReducer from "@/app/features/authSlice";
 import cartReducer from "@/app/features/cartSlice";
 import { categoriesApi } from "@/app/services/categoriesApi";
 import categryReducer from "@/app/features/categorySlice";
+import networkReducer from "@/app/features/networkSlice";
+
 export const store = configureStore({
 	reducer: {
+		network: networkReducer,
 		cart: cartReducer,
 		auth: authReducer,
 		category: categryReducer,

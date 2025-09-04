@@ -3,6 +3,7 @@ import {
 	handleCartProducts,
 	selectCartProducts,
 } from "@/app/features/cartSlice";
+import { selectNetworkStatus } from "@/app/features/networkSlice";
 import EmptyProductsState from "@/components/EmptyProductsState";
 import ProductCell from "@/components/ProductCell";
 import { toaster } from "@/config/toaster";
@@ -23,13 +24,24 @@ import {
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { IoBagCheckOutline } from "react-icons/io5";
+import { MdOutlineSignalWifiConnectedNoInternet4 } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
+	const isOnline = useSelector(selectNetworkStatus);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const cartProducts = useSelector(selectCartProducts);
+	if (!isOnline) {
+		return (
+			<EmptyProductsState
+				title='No Internet Connection'
+				description='Please check your internet connection and try again.'>
+				<MdOutlineSignalWifiConnectedNoInternet4 />
+			</EmptyProductsState>
+		);
+	}
 	if (cartProducts.length === 0) {
 		return (
 			<Stack justifyContent={"center"} alignItems={"center"}>

@@ -24,7 +24,10 @@ import {
 import type { ReactElement } from "react";
 import type { IconType } from "react-icons";
 import { useColorMode } from "@/hooks/useColorMode";
-
+import { MdOutlineSignalWifiConnectedNoInternet4 } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { selectNetworkStatus } from "@/app/features/networkSlice";
+import EmptyProductsState from "@/components/EmptyProductsState";
 interface FeatureProps {
 	text: string;
 	iconBg: string;
@@ -67,7 +70,17 @@ const CardFeature = ({ icon, title, description }: CardFeatureProps) => {
 };
 
 const AboutPage = () => {
+	const isOnline = useSelector(selectNetworkStatus);
 	const { colorMode } = useColorMode();
+	if (!isOnline) {
+		return (
+			<EmptyProductsState
+				title='No Internet Connection'
+				description='Please check your internet connection and try again.'>
+				<MdOutlineSignalWifiConnectedNoInternet4 />
+			</EmptyProductsState>
+		);
+	}
 	return (
 		<Container maxW={"7xl"} py={12} px={{ base: 4, sm: 6, md: 8 }} spaceY={10}>
 			<Stack gap={4} align='center' textAlign='center'>
