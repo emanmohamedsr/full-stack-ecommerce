@@ -55,7 +55,8 @@ const LogoutPage = () => {
 									description: "You have been successfully logged out.",
 								});
 								setTimeout(() => {
-									navigate("/login");
+									navigate("/", { replace: true });
+									window.location.href = "/";
 								}, 100);
 							}}
 							variant={"outline"}
