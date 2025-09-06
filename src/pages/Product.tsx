@@ -41,9 +41,7 @@ const ProductPage = () => {
 	} = useGetOneProductQuery(id!);
 	const { title, description, thumbnail, category, price, stock }: IProduct =
 		product || {};
-	const thumbnailUrl = thumbnail?.formats?.thumbnail?.url
-		? `${thumbnail.formats.thumbnail.url}`
-		: Product;
+	const thumbnailUrl = thumbnail?.url ? `${thumbnail.url}` : Product;
 	if (!isOnline) {
 		return (
 			<EmptyProductsState
