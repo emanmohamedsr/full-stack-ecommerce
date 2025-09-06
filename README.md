@@ -2,7 +2,7 @@
 
 ## Live Demo
 
-[View the deployed app on Vercel]()
+[View the deployed app on Vercel](https://full-stack-ecommerce-neon.vercel.app/)
 
 This is a full-stack ecommerce web application built with React, Vite, Redux Toolkit, Chakra UI, and TypeScript. It provides a modern, fast, and scalable solution for online stores, featuring authentication, product management, cart, checkout, and admin tools.
 
