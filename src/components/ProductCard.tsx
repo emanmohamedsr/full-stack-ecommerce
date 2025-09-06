@@ -31,7 +31,7 @@ const ProductCard = ({ product }: IProps) => {
 	return (
 		<Card.Root width='250px' height='550px' md={{ width: "320px" }}>
 			<Card.Body gap='2'>
-				<Box boxSize={{ base: "200px", md: "250px" }}>
+				<Box w={{ base: "200px", md: "250px" }}>
 					<Image
 						borderRadius='md'
 						src={thumbnailUrl}
@@ -42,7 +42,7 @@ const ProductCard = ({ product }: IProps) => {
 					/>
 				</Box>
 				<Card.Title mt='2'>{title}</Card.Title>
-				<Card.Description>{textSlice(description, 100)}</Card.Description>
+				<Card.Description>{textSlice(description, 50)}</Card.Description>
 				<Badge colorPalette={"teal"} mt='2' fontSize={"sm"} width='fit-content'>
 					{category.title}
 				</Badge>
