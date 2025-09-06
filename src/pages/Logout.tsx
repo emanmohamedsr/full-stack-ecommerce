@@ -55,18 +55,24 @@ const LogoutPage = () => {
 									description: "You have been successfully logged out.",
 								});
 								setTimeout(() => {
-									window.location.reload();
+									navigate("/login");
 								}, 100);
 							}}
-							variant='solid'
-							bg='red.700'
-							color='white'>
+							variant={"outline"}
+							bg={"red.200"}
+							borderWidth={"1px"}
+							borderColor={"red.700"}
+							borderStyle={"solid"}
+							color={"red.700"}>
 							Logout
 						</Button>
 						<Button
-							variant='solid'
-							bg='teal.700'
-							color='white'
+							variant={"outline"}
+							bg={"teal.200"}
+							borderWidth={"1px"}
+							borderColor={"teal.700"}
+							borderStyle={"solid"}
+							color={"teal.700"}
 							onClick={() => navigate(-1)}>
 							Back
 						</Button>
