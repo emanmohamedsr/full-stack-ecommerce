@@ -29,7 +29,7 @@ import { useState } from "react";
 import type { CookieSetOptions } from "universal-cookie";
 import { useDispatch } from "react-redux";
 import { setUserSession } from "@/app/features/authSlice";
-
+import GoogleButton from "@/components/GoogleButton";
 interface ISignupUser {
 	username: string;
 	email: string;
@@ -96,12 +96,23 @@ const SignupPage = () => {
 			align={"center"}
 			justify={"center"}
 			bg={colorMode === "light" ? "white" : "gray.800"}>
-			<Stack mx={"auto"} maxW={"xl"} gap={4} spaceY={2} px={6}>
+			<Stack mx={"auto"} maxW={"xl"} gap={2} px={6}>
 				<Heading
 					fontSize={"4xl"}
 					color={colorMode === "light" ? "teal.600" : "teal.600"}>
 					Create a new account
 				</Heading>
+
+				<HStack alignContent={"center"} justify={"center"} textAlign={"center"}>
+					Already have an account?
+					<Button
+						variant={"plain"}
+						color={"teal.600"}
+						ml={"-10px"}
+						onClick={() => navigate("/login")}>
+						Sign in
+					</Button>
+				</HStack>
 
 				<form onSubmit={handleSubmit(handleSignupUser)}>
 					<Fieldset.Root
@@ -193,16 +204,7 @@ const SignupPage = () => {
 					</Fieldset.Root>
 				</form>
 
-				<HStack alignContent={"center"} justify={"center"} textAlign={"center"}>
-					Already have an account?
-					<Button
-						variant={"plain"}
-						color={"teal.600"}
-						ml={"-10px"}
-						onClick={() => navigate("/login")}>
-						Sign in
-					</Button>
-				</HStack>
+				<GoogleButton />
 			</Stack>
 		</Flex>
 	);

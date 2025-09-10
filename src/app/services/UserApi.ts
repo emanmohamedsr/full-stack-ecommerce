@@ -46,6 +46,29 @@ export const UserApi = createApi({
 				return response;
 			},
 		}),
+		googleLogin: builder.query({
+			query: ({ access_token }) => ({
+				url: `auth/google/callback`,
+				method: "GET",
+				params: {
+					access_token,
+				},
+			}),
+		}),
+		forgotPassword: builder.mutation({
+			query: (email) => ({
+				url: "/auth/forgot-password",
+				method: "POST",
+				body: email,
+			}),
+		}),
+		resetPassword: builder.mutation({
+			query: ({ code, password, passwordConfirmation }) => ({
+				url: "/auth/reset-password",
+				method: "POST",
+				body: { code, password, passwordConfirmation },
+			}),
+		}),
 	}),
 });
 
@@ -54,4 +77,8 @@ export const {
 	useSignupUserMutation,
 	useGetMeQuery,
 	useLazyGetMeQuery,
+	useGoogleLoginQuery,
+	useLazyGoogleLoginQuery,
+	useForgotPasswordMutation,
+	useResetPasswordMutation,
 } = UserApi;
