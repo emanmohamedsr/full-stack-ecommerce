@@ -19,22 +19,26 @@
 ---
 
 
-This is a full-stack ecommerce web application built with React, Vite, Redux Toolkit, Chakra UI, and TypeScript. It provides a modern, fast, and scalable solution for online stores, featuring authentication, product management, cart, checkout, and admin tools.
+This project is a full-stack e-commerce web application built with React, TypeScript, Chakra UI, Redux Toolkit, and RTK Query. It features authentication, product and category management, a shopping cart with localStorage persistence, admin tools, and a custom notification system. Routing is handled with React Router, and state management utilizes Redux Toolkit and RTK Query for API integration.
 
 ## Features
 
-- **Authentication**: Signup, login, logout, protected routes
-- **Product Management**: Add, edit, delete, and view products
-- **Category Management**: Organize products by categories
-- **Cart & Checkout**: Add to cart, update quantities, checkout with payment and location forms
-- **Admin Dashboard**: Manage products, categories, and users
-- **Responsive UI**: Built with Chakra UI for mobile and desktop
-- **Error Handling**: Custom error pages and error handling components
-- **Loading States**: Skeletons and spinners for async actions
-- **Form Validation**: Yup schemas for all forms
-- **API Integration**: Axios for HTTP requests, RTK Query for data fetching
-- **State Management**: Redux Toolkit for global state
-- **Modern Tooling**: Vite for fast development, ESLint for code quality, TypeScript for type safety
+- **Authentication:** Signup, login, logout, protected routes (Redux Toolkit, RTK Query)
+- **Product Management:** Add, edit, delete, and view products (Admin dashboard)
+- **Category Management:** Organize products by categories
+- **Cart & Checkout:** Add to cart, update quantities, checkout flow with payment and location forms
+- **Cookie Service:** Persistent user/session data handling using cookies
+- **LocalStorage Integration:** Cart and category selections are saved between sessions
+- **Admin Dashboard:** Manage products, categories, and users with protected routes
+- **Responsive UI:** Chakra UI for mobile and desktop
+- **Error Handling:** Custom error pages and error handling components
+- **Loading States:** Skeletons and spinners for async actions
+- **Form Validation:** Yup schemas for robust form validation
+- **API Integration:** Axios for HTTP requests, RTK Query for data fetching and caching
+- **State Management:** Redux Toolkit for global state, with slices for auth, cart, category, network status
+- **Network Status Tracking:** Offline/online detection for robust UX
+- **Custom Toaster Notifications:** Feedback for async operations (e.g., clearing cart)
+- **Modern Tooling:** Vite for fast development, ESLint for code quality, TypeScript for type safety
 
 ## Project Structure
 
@@ -73,16 +77,21 @@ This is a full-stack ecommerce web application built with React, Vite, Redux Too
 
 ## Main Tools & Libraries
 
-- **React**: UI library
-- **Vite**: Build tool
-- **Redux Toolkit**: State management
-- **RTK Query**: Data fetching
-- **Chakra UI**: Component library
-- **Yup**: Form validation
-- **ReactHookForm**: React Forms
-- **Axios**: HTTP client
-- **TypeScript**: Type safety
-- **ESLint**: Linting
+- **React**: UI library for building user interfaces
+- **React Router**: Routing and navigation
+- **Vite**: Fast build tool and development server
+- **TypeScript**: Type safety for scalable code
+- **Redux Toolkit**: State management (slices for cart, auth, category, network)
+- **RTK Query**: Data fetching, caching, and API integration
+- **Axios**: HTTP client for API requests
+- **ReactHookForm**: Form state management in React
+- **Yup**: Schema-based form validation
+- **Chakra UI**: Accessible component library for styling and layout
+- **ESLint**: Code linting and quality
+- **Custom Cookie Service**: Utilities for handling cookies (session/user persistence)
+- **LocalStorage**: Persistence for cart and category selection
+- **Custom Hooks**: Typed Redux hooks and reusable logic
+- **Custom Toaster**: Notification system for async actions and feedback
 
 ## Getting Started
 
