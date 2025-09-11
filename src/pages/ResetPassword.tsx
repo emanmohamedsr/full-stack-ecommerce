@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 interface IFormInputs {
 	newPassword: string;
@@ -27,8 +27,8 @@ interface IFormInputs {
 const ResetPasswordPage = () => {
 	const [triggerResetPassword, { isLoading: isLoadingResetPassword }] =
 		useResetPasswordMutation();
-	const [searchParams] = useSearchParams();
-	const resetCode = searchParams.get("code");
+
+	const { code: resetCode } = useParams<{ code: string }>();
 
 	const {
 		register,
