@@ -32,7 +32,7 @@ const router = createBrowserRouter(
 					<Route path='cart' element={<CartPage />} />
 					<Route path='products/:id' element={<ProductPage />} />
 					<Route path='auth/google/callback' element={<GoogleCallback />} />
-					<Route path='reset-password' element={<ResetPasswordPage />} />
+					<Route path='reset-password/:code' element={<ResetPasswordPage />} />
 					<Route path='forget-password' element={<ForgetPasswordPage />} />
 
 					<Route
