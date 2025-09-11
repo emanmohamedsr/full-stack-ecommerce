@@ -102,3 +102,26 @@ export const PaymentSchema = yup.object({
 		.required("CVV is required"),
 	payment_method: yup.string().required("Payment method is required"),
 });
+
+export const EmailSchema = yup.object({
+	email: yup
+		.string()
+		.email("Invalid email address")
+		.matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Invalid email address")
+		.required("Email is required"),
+});
+
+export const ConfirmPasswordSchema = yup.object({
+	newPassword: yup
+		.string()
+		.min(6, "Password must be at least 6 characters")
+		.matches(
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/,
+			"Password must contain uppercase, lowercase letter, and numbers",
+		)
+		.required("Password is required"),
+	confirmNewPassword: yup
+		.string()
+		.oneOf([yup.ref("newPassword")], "Passwords must match")
+		.required("Confirm Password is required"),
+});

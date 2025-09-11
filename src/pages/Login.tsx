@@ -88,7 +88,7 @@ const LoginPage = () => {
 			});
 		}
 	};
-
+	const handleForgotPassword = () => navigate("/forget-password");
 	const { colorMode } = useColorMode();
 	return (
 		<Flex
@@ -171,7 +171,10 @@ const LoginPage = () => {
 								/>
 								<Checkbox.Label>Remember me</Checkbox.Label>
 							</Checkbox.Root>
-							<Button variant={"plain"} color={"teal.600"}>
+							<Button
+								onClick={handleForgotPassword}
+								variant={"plain"}
+								color={"teal.600"}>
 								Forgot Password?
 							</Button>
 						</HStack>

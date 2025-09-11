@@ -56,17 +56,17 @@ export const UserApi = createApi({
 			}),
 		}),
 		forgotPassword: builder.mutation({
-			query: (email) => ({
+			query: (body) => ({
 				url: "/auth/forgot-password",
 				method: "POST",
-				body: email,
+				body,
 			}),
 		}),
 		resetPassword: builder.mutation({
-			query: ({ code, password, passwordConfirmation }) => ({
+			query: (body) => ({
 				url: "/auth/reset-password",
 				method: "POST",
-				body: { code, password, passwordConfirmation },
+				body,
 			}),
 		}),
 	}),

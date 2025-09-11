@@ -7,12 +7,14 @@ import RootAdminLayout from "@/pages/AdminLayout";
 import GoogleCallback from "@/pages/auth/GoogleCallback";
 import CartPage from "@/pages/Cart";
 import CheckoutPage from "@/pages/Checkout";
+import ForgetPasswordPage from "@/pages/ForgetPassword";
 import RootLayout from "@/pages/Layout";
 import LoginPage from "@/pages/Login";
 import LogoutPage from "@/pages/Logout";
 import PageNotFound from "@/pages/PageNotFound";
 import ProductPage from "@/pages/Product";
 import ProfilePage from "@/pages/Profile";
+import ResetPasswordPage from "@/pages/ResetPassword";
 import SignupPage from "@/pages/Signup";
 import {
 	createBrowserRouter,
@@ -30,6 +32,9 @@ const router = createBrowserRouter(
 					<Route path='cart' element={<CartPage />} />
 					<Route path='products/:id' element={<ProductPage />} />
 					<Route path='auth/google/callback' element={<GoogleCallback />} />
+					<Route path='reset-password' element={<ResetPasswordPage />} />
+					<Route path='forget-password' element={<ForgetPasswordPage />} />
+
 					<Route
 						path='login'
 						element={
