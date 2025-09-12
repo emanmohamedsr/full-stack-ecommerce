@@ -30,6 +30,7 @@ import type { IResponse, IUser } from "@/interfaces/User";
 import { useDispatch } from "react-redux";
 import { setUserSession } from "@/app/features/authSlice";
 import GoogleButton from "@/components/GoogleButton";
+import SendEmailConfirmation from "@/components/SendEmailConfirmation";
 
 interface ILoginUser {
 	identifier: string;
@@ -38,8 +39,11 @@ interface ILoginUser {
 
 const LoginPage = () => {
 	const dispatch = useDispatch();
-	const [loginUser, { isLoading }] = useLoginUserMutation();
+	const [loginUser, { isLoading, isError, error }] = useLoginUserMutation();
+	const isLoginError: boolean = isError;
+	const loginError = error as IError;
 	const [triggerGetMe] = useLazyGetMeQuery();
+	const [userEmail, setUserEmail] = useState<string>("");
 	const [rememberMe, setRememberMe] = useState<boolean>(false);
 	const navigate = useNavigate();
 	const {
@@ -51,9 +55,10 @@ const LoginPage = () => {
 	});
 
 	const handleLoginUser = async (data: ILoginUser) => {
+		setUserEmail(data.identifier);
 		try {
 			const res: IResponse = await loginUser(data).unwrap();
-
+			setUserEmail("");
 			const options: CookieSetOptions = {
 				path: "/",
 			};
@@ -197,7 +202,11 @@ const LoginPage = () => {
 						</Button>
 					</Fieldset.Root>
 				</form>
-
+				{isLoginError &&
+					loginError.data.error?.message
+						?.toLowerCase()
+						.includes("not confirmed") &&
+					userEmail && <SendEmailConfirmation email={userEmail} />}
 				<GoogleButton />
 			</Stack>
 		</Flex>

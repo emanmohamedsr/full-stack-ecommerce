@@ -289,6 +289,23 @@ const Navbar = () => {
 				{open ? (
 					<Box pb={4} display={{ md: "none" }}>
 						<Stack as={"nav"} gap={4}>
+							<Link to='/'>
+								<Stack
+									display={{ base: "flex", sm: "none" }}
+									direction={"row"}
+									gap={0}>
+									<Image
+										position={"relative"}
+										top={"-4px"}
+										left={"6px"}
+										src={Logo1}
+										alt='Logo'
+										w={"20px"}
+										objectFit={"contain"}
+									/>
+									<Image src={Logo0} alt='Logo' w={"150px"} />
+								</Stack>
+							</Link>
 							{isAuthenticated && isAdmin && (
 								<Link to='/admin/dashboard'>
 									<MyChakraNavLink>Admin Dashboard</MyChakraNavLink>

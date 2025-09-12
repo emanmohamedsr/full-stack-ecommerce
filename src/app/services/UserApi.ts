@@ -69,6 +69,20 @@ export const UserApi = createApi({
 				body,
 			}),
 		}),
+		confirmEmail: builder.query({
+			query: ({ token }: { token: string }) => ({
+				url: `/auth/email-confirmation?confirmation=${token}`,
+				method: "GET",
+			}),
+		}),
+		sendEmailConfirmation: builder.mutation({
+			query: (body) => ({
+				url: `/auth/send-email-confirmation`,
+				method: "POST",
+				body,
+			}),
+			invalidatesTags: ["User"],
+		}),
 	}),
 });
 
@@ -81,4 +95,6 @@ export const {
 	useLazyGoogleLoginQuery,
 	useForgotPasswordMutation,
 	useResetPasswordMutation,
+	useConfirmEmailQuery,
+	useSendEmailConfirmationMutation,
 } = UserApi;
